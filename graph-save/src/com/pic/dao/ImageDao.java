@@ -31,17 +31,166 @@ import com.pic.model.ImageInfo;
  */
 public class ImageDao {
     
-    private static final String DB_PATH = "D:/pic/db";
+    private static final String DB_PATH = "E:/pic/db";
     GraphDatabaseService db = null;
 
     public ImageDao() {
         db = new GraphDatabaseFactory().newEmbeddedDatabase(DB_PATH);
         registerShutdownHook(db);
     }
+    
+    
+    //根据文件夹名，存储该文件夹内的所有图片
+    public boolean saveAll(String folder){
+    	File headFile = new File(System.getProperty("user.dir")+"\\"+folder);
+    	if(!headFile.exists())
+    	{
+    		 System.out.println("目标文件夹不存在");
+             return false;
+    	}
+    	
+    	saveAll(headFile);
+//    	
+//        Transaction tx = db.beginTx();
+//        try {
+//       
+//        	saveAll(headFile);
+//            tx.success();
+//
+//        }
+//        finally {
+//            tx.finish();
+//        }
+    	
+    	return true;
+    }
+    
+    //目标文件存储，file可以为目录和文件
+    public boolean saveAll(File file)
+    {
+    	if(file.isFile())
+    	{
+//    		Node node = db.createNode();
+//            // 为fileName属性添加索引
+//            Index<Node> index = db.index().forNodes("nodes");
+            String fileName = file.getName();
+            if(!isExsit(fileName))
+            {
+            	System.out.println(fileName+"正在存储");
+            	saveOne(file);
+//                node.setProperty("fileName", fileName);
+//                index.add(node, "fileName", fileName);
+//
+//                String formatType = fileName.substring(fileName.lastIndexOf(".") + 1);
+//                node.setProperty("formatType", formatType);
+//                BufferedImage image = null;
+//                try {
+//                    image = ImageIO.read(file);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                if (image == null) {
+//                    System.out.println("图片读取失败，请检查图片");
+//                    return false;
+//                }
+//                int imageType = image.getType();
+//                node.setProperty("imageType", imageType);
+//
+//                int width = image.getWidth();
+//                int height = image.getHeight();
+//                node.setProperty("width", width);
+//                node.setProperty("height", height);
+//
+//                int minx = image.getMinX();
+//                int miny = image.getMinY();
+//                node.setProperty("minx", minx);
+//                node.setProperty("miny", miny);
+//
+//                int offset = 0;
+//                int scansize = width;
+//
+//                int[] pixelArray = new int[offset + (height - miny) * scansize];
+//                image.getRGB(minx, miny, width, height, pixelArray, offset, scansize);
+//
+//                node.setProperty("pixelArray", pixelArray);
+            }else
+            {
+            	System.out.println(fileName+"已存在");
+            }
+            
+    	}else{
+    		System.out.println(file.getName()+":文件夹正在存储");
+    		File[] subFiles = file.listFiles();
+    		for(File subFile : subFiles)
+    		{
+    			saveAll(subFile);
+    		}	
+    	}
+    	
+    	return true;
+    	
+    }
+    
+    //单个文件存储
+    public boolean saveOne(File file)
+    {
+    	Transaction tx = db.beginTx();
+    	try{
+    	Node node = db.createNode();
+        // 为fileName属性添加索引
+        Index<Node> index = db.index().forNodes("nodes");
+        String fileName = file.getName();
+        System.out.println(fileName);
+        node.setProperty("fileName", fileName);
+        index.add(node, "fileName", fileName);
+
+        String formatType = fileName.substring(fileName.lastIndexOf(".") + 1);
+        node.setProperty("formatType", formatType);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (image == null) {
+            System.out.println("图片读取失败，请检查图片");
+            return false;
+        }
+        int imageType = image.getType();
+        node.setProperty("imageType", imageType);
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+        node.setProperty("width", width);
+        node.setProperty("height", height);
+
+        int minx = image.getMinX();
+        int miny = image.getMinY();
+        node.setProperty("minx", minx);
+        node.setProperty("miny", miny);
+
+        int offset = 0;
+        int scansize = width;
+
+        int[] pixelArray = new int[offset + (height - miny) * scansize];
+        image.getRGB(minx, miny, width, height, pixelArray, offset, scansize);
+
+        node.setProperty("pixelArray", pixelArray);
+    	
+        tx.success();
+    	}finally{
+    		tx.finish();
+    	}
+    	
+    	return true;
+    }
+    
 
     // 根据图片路径存储图片
     // 如D:/pic/test.jpg
-    public boolean save(String path) {
+    public boolean saveOne(String path) {
         File file = new File(path);
         if (!file.exists()) {
             System.out.println("目标图片不存在");
@@ -172,52 +321,8 @@ public class ImageDao {
 
     }
 
-
-    // 根据map对象包含的图片信息重建图片
-    public static boolean createImage(ImageInfo image, String outPath) {
-        if (image == null) {
-            System.out.println("map 输入为 null");
-            return false;
-        }
-        OutputStream output = null;
-        int imageType = image.getImageType();
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int scansize = width;
-        int minx = image.getMinx();
-        int miny = image.getMiny();
-        int[] pixelArray = image.getPixelArray();
-        String formatType = image.getFormatType();
-        try {
-            File file = new File(outPath);
-            if (!file.exists()) {
-                File dir = file.getParentFile();
-                if (!dir.exists()) dir.mkdirs();
-                file.createNewFile();
-            } else {
-                System.out.println("图片已存在");
-                return false;
-            }
-
-            output = new FileOutputStream(file);
-            BufferedImage imgOut = new BufferedImage(width, height, imageType);
-            // offset 暂时设定为0
-            // imgOut.setRGB(minx, miny, width, height, pixelArray, offset, scansize);
-            imgOut.setRGB(minx, miny, width, height, pixelArray, 0, scansize);
-            ImageIO.write(imgOut, formatType, output);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (output != null) try {
-                output.close();
-            } catch (IOException e) {}
-        }
-        return true;
-    }
-
     // 关闭数据库
-    void shutDown() {
+    public void shutDown() {
         System.out.println();
         System.out.println("Shutting down database ...");
         // START SNIPPET: shutdownServer
@@ -239,17 +344,19 @@ public class ImageDao {
     }
 
     public static void main(String[] args) {
-        ImageDao dao = new ImageDao();
-        boolean isSave = dao.save("D:/1.jpg");
-        if (isSave == true) {
-           ImageInfo image = dao.load("1.jpg");
-            if (image != null) {
-                boolean isCreate = createImage(image, "D:/copy" + image.getFileName());
-                System.out.println(isCreate);
-            }
-        }
-
-        dao.shutDown();
+//        ImageDao dao = new ImageDao();
+//        boolean isSave = dao.save("D:/1.jpg");
+//        if (isSave == true) {
+//           ImageInfo image = dao.load("1.jpg");
+//            if (image != null) {
+//                boolean isCreate = createImage(image, "D:/copy" + image.getFileName());
+//                System.out.println(isCreate);
+//            }
+//        }
+//
+//        dao.shutDown();
+    	
+    	System.out.println(System.getProperty("user.dir"));
 
 
     }

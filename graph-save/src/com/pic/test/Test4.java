@@ -3,6 +3,10 @@
  */
 package com.pic.test;
 
+import com.pic.dao.ImageDao;
+import com.pic.model.ImageInfo;
+import com.pic.util.ImageUtil;
+
 /**
  * <p>(ss</p>
  * @author jiahc1
@@ -12,5 +16,21 @@ package com.pic.test;
  * @version V1.0  
  */
 public class Test4 {
+	
+	public static void main(String[] args) {
+		ImageDao dao = new ImageDao();
+//		dao.saveAll("contest_data");
+		String imgName = "clothes_145080.jpg";
+		long start = System.currentTimeMillis();
+		ImageInfo image = dao.load(imgName);
+		long end = System.currentTimeMillis();
+		System.out.println(end - start);
+		
+		boolean b = ImageUtil.createImage(image, "E:/temp/"+imgName);
+		System.out.println(b);
+		
+		dao.shutDown();
+	}
+	
 
 }
