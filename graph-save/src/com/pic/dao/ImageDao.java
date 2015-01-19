@@ -32,9 +32,20 @@ import com.pic.model.ImageInfo;
 public class ImageDao {
     
     private static final String DB_PATH = "E:/pic/db";
-    GraphDatabaseService db = null;
+    public static GraphDatabaseService db ;
+    
+    public static ImageDao dao;
+    
+    //单例模式，延迟加载
+    public static ImageDao getInstance(){
+    	return ImageDaoHolder.dao;
+    }
+    
+    static class ImageDaoHolder{
+    	static ImageDao dao = new ImageDao();
+    }
 
-    public ImageDao() {
+    private ImageDao() {
         db = new GraphDatabaseFactory().newEmbeddedDatabase(DB_PATH);
         registerShutdownHook(db);
     }

@@ -17,8 +17,9 @@ import com.pic.util.ImageUtil;
  */
 public class Test4 {
 	
+	
 	public static void main(String[] args) {
-		ImageDao dao = new ImageDao();
+		ImageDao dao = ImageDao.getInstance();
 //		dao.saveAll("contest_data");
 		String imgName = "clothes_145080.jpg";
 		long start = System.currentTimeMillis();
