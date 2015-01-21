@@ -16,6 +16,8 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
 
+import com.pic.util.ImageConfiguration;
+
 /**
  * <p>(批量插入大文件，有用没有事务保证，所以该方法不安全)</p>
  * @author jiahc1
@@ -30,7 +32,7 @@ public class ImageBatchInsert {
     
     public ImageBatchInsert(){
         
-        db = BatchInserters.inserter( "D:/target/batchinserter-example" );
+        db = BatchInserters.inserter( ImageConfiguration.ImgStoreDir );
     }
     
     public boolean saveAll(String folder)

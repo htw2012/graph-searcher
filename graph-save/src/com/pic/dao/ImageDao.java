@@ -20,6 +20,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
 
 import com.pic.model.ImageInfo;
+import com.pic.util.ImageConfiguration;
 
 /**
  * <p>(用一句话描述该文件做什么)</p>
@@ -31,7 +32,7 @@ import com.pic.model.ImageInfo;
  */
 public class ImageDao {
     
-    private static final String DB_PATH = "E:/pic/db";
+    private static final String DB_PATH = ImageConfiguration.ImgStoreDir;
     public static GraphDatabaseService db ;
     
     public static ImageDao dao;
