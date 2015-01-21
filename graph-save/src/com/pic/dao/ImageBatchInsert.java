@@ -13,9 +13,6 @@ import javax.imageio.ImageIO;
 
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.index.Index;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
 
@@ -45,16 +42,17 @@ public class ImageBatchInsert {
              return false;
         }
         
-        saveAll(headFile);
+        Label imageLabel = DynamicLabel.label( "Image" );
+        db.createDeferredSchemaIndex( imageLabel ).on( "fileName" ).create();
+        
+        saveAll(headFile,imageLabel);
         
         return true;
     }
     
     //目标文件存储，file可以为目录和文件
-    public boolean saveAll(File file)
+    public boolean saveAll(File file, Label label)
     {
-        Label imageLable = DynamicLabel.label( "Image" );
-        db.createDeferredSchemaIndex( imageLable ).on( "fileName" ).create();
         
         if(file.isFile())
         {
@@ -99,20 +97,32 @@ public class ImageBatchInsert {
 
                 properties.put("pixelArray", pixelArray); 
                 
-                db.createNode( properties, imageLable );
+                db.createNode( properties, label );
             
         }else{
             System.out.println(file.getName()+":文件夹正在存储");
             File[] subFiles = file.listFiles();
             for(File subFile : subFiles)
             {
-                saveAll(subFile);
+                saveAll(subFile,label);
             }   
         }
         
         return true;
         
     }
+    
+    // 关闭数据库
+    public void shutDown() {
+        System.out.println();
+        System.out.println("Shutting down database ...");
+        // START SNIPPET: shutdownServer
+        db.shutdown();
+        // END SNIPPET: shutdownServer
+    }
+
+
+
     
 
 }
