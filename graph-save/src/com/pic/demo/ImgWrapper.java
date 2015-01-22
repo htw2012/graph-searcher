@@ -43,7 +43,7 @@ public class ImgWrapper {
      */
     public static ImageInfo getImage(String imgName){
         ImageDao imgDao = ImageDao.getInstance();
-        return imgDao.load(imgName);
+        return imgDao.findOne(imgName);
     }
     
     @Test
