@@ -35,6 +35,11 @@ public class ImageBatchInsert {
         db = BatchInserters.inserter( ImageConfiguration.ImgStoreDir );
     }
     
+    /**
+     * 根据图片名存储图片，或者根据文件夹名存储文件夹下的所有图片
+     * @param folder 如：shose100001.jpg 、contest_data
+     * @return
+     */
     public boolean saveAll(String folder)
     {
         File headFile = new File(System.getProperty("user.dir")+"\\"+folder);
@@ -52,8 +57,9 @@ public class ImageBatchInsert {
         return true;
     }
     
+    
     //目标文件存储，file可以为目录和文件
-    public boolean saveAll(File file, Label label)
+    private boolean saveAll(File file, Label label)
     {
         
         if(file.isFile())
@@ -122,8 +128,6 @@ public class ImageBatchInsert {
         db.shutdown();
         // END SNIPPET: shutdownServer
     }
-
-
 
     
 

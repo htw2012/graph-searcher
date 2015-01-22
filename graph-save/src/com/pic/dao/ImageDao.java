@@ -5,19 +5,21 @@ package com.pic.dao;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.index.Index;
+import org.neo4j.graphdb.schema.IndexDefinition;
+import org.neo4j.tooling.GlobalGraphOperations;
 
 import com.pic.model.ImageInfo;
 import com.pic.util.ImageConfiguration;
@@ -52,172 +54,26 @@ public class ImageDao {
     }
     
     
-    //根据文件夹名，存储该文件夹内的所有图片
-    public boolean saveAll(String folder){
-    	File headFile = new File(System.getProperty("user.dir")+"\\"+folder);
-    	if(!headFile.exists())
-    	{
-    		 System.out.println("目标文件夹不存在");
-             return false;
-    	}
-    	
-    	saveAll(headFile);
-//    	
-//        Transaction tx = db.beginTx();
-//        try {
-//       
-//        	saveAll(headFile);
-//            tx.success();
-//
-//        }
-//        finally {
-//            tx.finish();
-//        }
-    	
-    	return true;
-    }
-    
-    //目标文件存储，file可以为目录和文件
-    public boolean saveAll(File file)
+    /**
+     * 根据图片文件名，保存主目录下的图片
+     * @param fileName 如：shose100001.jpg
+     * @return
+     */
+    public boolean saveOne(String fileName)
     {
-    	if(file.isFile())
-    	{
-//    		Node node = db.createNode();
-//            // 为fileName属性添加索引
-//            Index<Node> index = db.index().forNodes("nodes");
-            String fileName = file.getName();
-            if(!isExsit(fileName))
-            {
-            	System.out.println(fileName+"正在存储");
-            	saveOne(file);
-//                node.setProperty("fileName", fileName);
-//                index.add(node, "fileName", fileName);
-//
-//                String formatType = fileName.substring(fileName.lastIndexOf(".") + 1);
-//                node.setProperty("formatType", formatType);
-//                BufferedImage image = null;
-//                try {
-//                    image = ImageIO.read(file);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                if (image == null) {
-//                    System.out.println("图片读取失败，请检查图片");
-//                    return false;
-//                }
-//                int imageType = image.getType();
-//                node.setProperty("imageType", imageType);
-//
-//                int width = image.getWidth();
-//                int height = image.getHeight();
-//                node.setProperty("width", width);
-//                node.setProperty("height", height);
-//
-//                int minx = image.getMinX();
-//                int miny = image.getMinY();
-//                node.setProperty("minx", minx);
-//                node.setProperty("miny", miny);
-//
-//                int offset = 0;
-//                int scansize = width;
-//
-//                int[] pixelArray = new int[offset + (height - miny) * scansize];
-//                image.getRGB(minx, miny, width, height, pixelArray, offset, scansize);
-//
-//                node.setProperty("pixelArray", pixelArray);
-            }else
-            {
-            	System.out.println(fileName+"已存在");
-            }
-            
-    	}else{
-    		System.out.println(file.getName()+":文件夹正在存储");
-    		File[] subFiles = file.listFiles();
-    		for(File subFile : subFiles)
-    		{
-    			saveAll(subFile);
-    		}	
-    	}
-    	
-    	return true;
-    	
-    }
-    
-    //单个文件存储
-    public boolean saveOne(File file)
-    {
-    	Transaction tx = db.beginTx();
-    	try{
-    	Node node = db.createNode();
-        // 为fileName属性添加索引
-        Index<Node> index = db.index().forNodes("nodes");
-        String fileName = file.getName();
-        System.out.println(fileName);
-        node.setProperty("fileName", fileName);
-        index.add(node, "fileName", fileName);
-
-        String formatType = fileName.substring(fileName.lastIndexOf(".") + 1);
-        node.setProperty("formatType", formatType);
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (image == null) {
-            System.out.println("图片读取失败，请检查图片");
-            return false;
-        }
-        int imageType = image.getType();
-        node.setProperty("imageType", imageType);
-
-        int width = image.getWidth();
-        int height = image.getHeight();
-        node.setProperty("width", width);
-        node.setProperty("height", height);
-
-        int minx = image.getMinX();
-        int miny = image.getMinY();
-        node.setProperty("minx", minx);
-        node.setProperty("miny", miny);
-
-        int offset = 0;
-        int scansize = width;
-
-        int[] pixelArray = new int[offset + (height - miny) * scansize];
-        image.getRGB(minx, miny, width, height, pixelArray, offset, scansize);
-
-        node.setProperty("pixelArray", pixelArray);
-    	
-        tx.success();
-    	}finally{
-    		tx.finish();
-    	}
-    	
-    	return true;
-    }
-    
-
-    // 根据图片路径存储图片
-    // 如D:/pic/test.jpg
-    public boolean saveOne(String path) {
-        File file = new File(path);
+        File file = new File(System.getProperty("user.dir")+"\\"+fileName);
         if (!file.exists()) {
             System.out.println("目标图片不存在");
             return false;
         }
-        Transaction tx = db.beginTx();
-        try {
-            Node node = db.createNode();
-            // 为fileName属性添加索引
-            Index<Node> index = db.index().forNodes("nodes");
-            String fileName = file.getName();
-            System.out.println(fileName);
+        
+        try ( Transaction tx = db.beginTx() )
+        {
+            Label label = DynamicLabel.label( "Image" );
+        
+            Node node = db.createNode( label );
             node.setProperty("fileName", fileName);
-            index.add(node, "fileName", fileName);
-
+            
             String formatType = fileName.substring(fileName.lastIndexOf(".") + 1);
             node.setProperty("formatType", formatType);
             BufferedImage image = null;
@@ -225,7 +81,7 @@ public class ImageDao {
                 image = ImageIO.read(file);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+             }
 
             if (image == null) {
                 System.out.println("图片读取失败，请检查图片");
@@ -252,22 +108,24 @@ public class ImageDao {
 
             node.setProperty("pixelArray", pixelArray);
             tx.success();
-
-            return true;
-        } finally {
-            tx.finish();
+        
         }
-
+         
+        return true;
     }
-
-    // 根据图片名查找图片，返回包含图片信息的map对象
-    // 如 test.jpg
-    public ImageInfo load(String fileName) {
+    
+    /**
+     * 根据图片名查找图片，返回包含图片信息的ImageInfo对象
+     * 
+     * @param fileName 如: shose100001.jpg
+     * @return
+     */
+    public ImageInfo findOne(String fileName) {
         ImageInfo image = new ImageInfo();
-        Transaction tx = db.beginTx();
-        try {
-            Index<Node> index = db.index().forNodes("nodes");
-            Node node = index.get("fileName", fileName).getSingle();
+        
+        try (Transaction tx = db.beginTx()){
+            Label imageLabel = DynamicLabel.label( "Image" );
+            Node node = db.findNode(imageLabel, "fileName", fileName);
             if (node == null) {
                 System.out.println(fileName + " 不存在");
                 return null;
@@ -288,36 +146,92 @@ public class ImageDao {
                 System.out.println("属性读取错误");
                 return null;
             }
-        } finally {
-            tx.finish();
-        }
+        } 
         return image;
     }
+    
+    
+    public List<ImageInfo> findByArray(String[] fileNameArray)
+    {
+        List<ImageInfo> list = new ArrayList<ImageInfo>();
+        try (Transaction tx = db.beginTx())
+        {
+            Label imageLabel = DynamicLabel.label( "Image" );
+            for(String fileName : fileNameArray)
+            {
+                ImageInfo image = new ImageInfo();
+                Node node = db.findNode(imageLabel, "fileName", fileName);
+                if (node == null) {
+                    System.out.println(fileName + " 不存在");
+                    continue;
+                }
+                
+                image.setFileName(fileName);
+                image.setFormatType((String)(node.getProperty("formatType")));
+                image.setImageType((int)(node.getProperty("imageType")));
+                image.setWidth((int)(node.getProperty("width")));
+                image.setHeight((int)(node.getProperty("height")));
+                image.setMinx((int)(node.getProperty("minx")));
+                image.setMiny((int)(node.getProperty("miny")));
+                image.setPixelArray((int[])(node.getProperty("pixelArray"))); 
+                
+                list.add(image);
+            }
+            tx.success();
+        }
+        
+        return list;
+    }
+    
+    /**
+     * 该方法暂时不提供
+     */
+    public void getAllNodes(){
+        try(Transaction tx = db.beginTx())
+        {
+            Iterable<Node> nodesIt = GlobalGraphOperations.at(db).getAllNodes();
+            Iterator<Node> nodes = nodesIt.iterator();
+            while(nodes.hasNext())
+            {
+                Node node = nodes.next();
+                String fileName = (String) node.getProperty("fileName");
+                System.out.println(fileName);
+            }
+            tx.success();
+        }
+    }
 
-    // 根据文件名，查找数据库中是否存在
+    /**
+     * 根据文件名，查找数据库中是否存在   
+     * @param fileName  如：shose100001.jpg
+     * @return
+     */
     public boolean isExsit(String fileName) {
-        Transaction tx = db.beginTx();
-        try {
-            Index<Node> index = db.index().forNodes("nodes");
-            Node node = index.get("fileName", fileName).getSingle();
+        try(Transaction tx = db.beginTx())
+        {
+            Label imageLabel = DynamicLabel.label( "Image" );
+            Node node = db.findNode(imageLabel, "fileName", fileName);
+
             if (node == null) {
                 System.out.println(fileName + " 不存在");
                 return false;
             }
-        } finally {
-            tx.finish();
-        }
-
+        } 
         return true;
     }
     
-    
+    /**
+     * 根据文件名，查找数据库中是否存在,如果存在删除对应节点   
+     * @param fileName 如：shose100001.jpg
+     * @return
+     */
     public boolean delete(String fileName)
     {
-        Transaction tx = db.beginTx();
-        try {
-            Index<Node> index = db.index().forNodes("nodes");
-            Node node = index.get("fileName", fileName).getSingle();
+        
+        try (Transaction tx = db.beginTx())
+        {
+            Label imageLabel = DynamicLabel.label( "Image" );
+            Node node = db.findNode(imageLabel, "fileName", fileName);
             if (node == null) {
                 System.out.println(fileName + " 不存在");
                 return false;
@@ -325,12 +239,23 @@ public class ImageDao {
                 node.delete();
             }
             
-        } finally {
-            tx.finish();
-        }
-        
+        } 
         return true;
-
+    }
+    
+    public void checkIndex()
+    {
+        try ( Transaction tx = db.beginTx() )
+        {
+        Label label = DynamicLabel.label( "Image" );
+        for ( IndexDefinition indexDefinition : db.schema()
+        .getIndexes( label ) )
+        {
+            String indexName = indexDefinition.getLabel().name();
+            System.out.println(indexName);
+        }
+        tx.success();
+        }
     }
 
     // 关闭数据库
