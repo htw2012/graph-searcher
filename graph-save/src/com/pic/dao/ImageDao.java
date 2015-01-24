@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.junit.Assert;
+import org.neo4j.backup.OnlineBackup;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -243,7 +245,20 @@ public class ImageDao {
             }
         });
     }
-
+    /**
+     *  备份数据库
+     * @param dbAddr 需要备份DB库地址
+     * @param backupPath 备份目录
+     * @author towan	
+     * @Email  tongwenzide@163.com
+     * 2015年1月24日下午5:15:44
+     */
+    public void  backup(String dbAddr,String backupPath){
+        OnlineBackup backup = OnlineBackup.from( dbAddr );
+        backup.full( backupPath );
+        Assert.assertTrue( "Should be consistent", backup.isConsistent() );
+        backup.incremental( backupPath );
+    }
     public static void main(String[] args) {
         // ImageDao dao = new ImageDao();
         // boolean isSave = dao.save("D:/1.jpg");
