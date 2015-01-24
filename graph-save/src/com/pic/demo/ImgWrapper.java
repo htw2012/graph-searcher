@@ -4,7 +4,10 @@
 package com.pic.demo;
 
 import java.io.IOException;
+import java.util.Arrays;
+
 import org.junit.Test;
+
 import com.pic.dao.ImageBatchInsert;
 import com.pic.dao.ImageDao;
 import com.pic.model.ImageInfo;
@@ -52,8 +55,10 @@ public class ImgWrapper {
     }
     @Test
     public void testQueryImage() throws IOException{
-        ImageInfo image = getImage("clothes_250001.jpg");
-        String json = JsonUtil.toJson(image);
-        System.out.println("ImageInfo:\n"+json);
+        ImageInfo image = getImage("clothes_250003.jpg");
+        System.out.println("Image size:"+image.getPixelArray().length);
+        System.out.println("Image Pixel:"+Arrays.toString(image.getPixelArray()));
+//        String json = JsonUtil.toJson(image);
+//        System.out.println("ImageInfo:\n"+json);
     }
 }

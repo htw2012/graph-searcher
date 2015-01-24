@@ -13,7 +13,7 @@ package com.pic.util;
  */
 public class ImageConfiguration {
 
-    public static String ImgStoreDir = "datas";
+    public static String ImgStoreDir = "192.168.1.127";//"172.31.12.22:7474";//"datas";
     
     public static String ImgSourceFolder = "images";
 }
