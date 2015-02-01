@@ -1,9 +1,10 @@
 /*
- * Copyright Lenovo @ 2015 °æÈ¨ËùÓĞ
+ * Copyright Lenovo @ 2015 ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 package com.pic.dao;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,19 +21,21 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.tooling.GlobalGraphOperations;
 
-import com.pic.model.ImageInfo;
+import com.pic.model.ImageByte;
+import com.pic.model.ImagePixArray;
+import com.pic.model.ImagePixMatrix;
+import com.pic.model.RelTypes;
 import com.pic.util.ImageConfiguration;
 
 /**
  * <p>
- * (ÓÃÒ»¾ä»°ÃèÊö¸ÃÎÄ¼ş×öÊ²Ã´)
+ * (ï¿½ï¿½Ò»ï¿½ä»°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ê²Ã´)
  * </p>
  * 
  * @author jiahc1
- * @Email jiahc1@lenovo.com 2015-1-17ÏÂÎç7:52:57
+ * @Email jiahc1@lenovo.com 2015-1-17ï¿½ï¿½ï¿½ï¿½7:52:57
  *
  * @version V1.0
  */
@@ -43,7 +46,6 @@ public class ImageDao {
 
     public static ImageDao dao;
 
-    // µ¥ÀıÄ£Ê½£¬ÑÓ³Ù¼ÓÔØ
     public static ImageDao getInstance() {
         return ImageDaoHolder.dao;
     }
@@ -57,96 +59,194 @@ public class ImageDao {
         registerShutdownHook(db);
     }
 
-
     /**
-     * ¸ù¾İÍ¼Æ¬ÎÄ¼şÃû£¬±£´æÖ÷Ä¿Â¼ÏÂµÄÍ¼Æ¬
-     * 
-     * @param fileName Èç£ºshose100001.jpg
+     * è¯¥æ–¹æ³•ä¼šæ ¹æ®æ–‡ä»¶åå­˜å‚¨ä¸»ç›®å½•ä¸‹çš„å•å¼ å›¾ç‰‡ï¼Œåœ¨æ•°æ®åº“ä¸­ç”Ÿæˆä¸‰ä¸ªèŠ‚ç‚¹ï¼Œå¹¶å»ºç«‹å…³ç³»
+     * @param fileName
      * @return
      */
     public boolean saveOne(String fileName) {
         File file = new File(System.getProperty("user.dir") + "\\" + fileName);
         if (!file.exists()) {
-            System.out.println("Ä¿±êÍ¼Æ¬²»´æÔÚ");
+            System.out.println("ç›®æ ‡å›¾ç‰‡ä¸å­˜åœ¨");
             return false;
         }
 
         try (Transaction tx = db.beginTx()) {
-            Label label = DynamicLabel.label("Image");
+            Label imageLabel = DynamicLabel.label("Image");
+            Label pixelArrayLabel = DynamicLabel.label("PixelArray");
+            Label pixelMatrixLabel = DynamicLabel.label("PixelMatrix");
 
-            Node node = db.createNode(label);
-            node.setProperty("fileName", fileName);
+            Node imageNode = db.createNode(imageLabel);
+            Node pixArrNode = db.createNode(pixelArrayLabel);
+            Node pixMatNode = db.createNode(pixelMatrixLabel); 
+            
+            imageNode.setProperty("fileName", fileName);
+            pixArrNode.setProperty("fileName", fileName);
+            pixMatNode.setProperty("fileName", fileName);
 
             String formatType = fileName.substring(fileName.lastIndexOf(".") + 1);
-            node.setProperty("formatType", formatType);
             BufferedImage image = null;
-            try {
-                image = ImageIO.read(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            image = ImageIO.read(file);
 
             if (image == null) {
-                System.out.println("Í¼Æ¬¶ÁÈ¡Ê§°Ü£¬Çë¼ì²éÍ¼Æ¬");
+                System.out.println("å›¾ç‰‡è¯»å–å¤±è´¥ï¼Œè¯·æ£€æŸ¥å›¾ç‰‡");
                 return false;
             }
-            int imageType = image.getType();
-            node.setProperty("imageType", imageType);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, formatType, baos);
+            byte[] imageByteArray = baos.toByteArray();
+            imageNode.setProperty("imageByteArray", imageByteArray);
 
+            int imageType = image.getType();
+            pixArrNode.setProperty("imageType", imageType);
             int width = image.getWidth();
             int height = image.getHeight();
-            node.setProperty("width", width);
-            node.setProperty("height", height);
-
+            pixArrNode.setProperty("width", width);
+            pixArrNode.setProperty("height", height);
             int minx = image.getMinX();
             int miny = image.getMinY();
-            node.setProperty("minx", minx);
-            node.setProperty("miny", miny);
+            pixArrNode.setProperty("minx", minx);
+            pixArrNode.setProperty("miny", miny);
 
             int offset = 0;
             int scansize = width;
-
             int[] pixelArray = new int[offset + (height - miny) * scansize];
             image.getRGB(minx, miny, width, height, pixelArray, offset, scansize);
-
-            node.setProperty("pixelArray", pixelArray);
+            pixArrNode.setProperty("pixelArray", pixelArray);
+            
+            int[][] pixelMatrix = new int[width][height];
+            int k = 0;
+            for(int i=0;i<width;i++){  
+                for(int j=0;j<height;j++){  
+                    pixelMatrix[i][j] = pixelArray[k];  
+                    k++;  
+                }  
+            }
+            pixMatNode.setProperty("pixelMatix", pixelMatrix);
+            
+            imageNode.createRelationshipTo(pixArrNode, RelTypes.PIXELARRAY);
+            imageNode.createRelationshipTo(pixMatNode, RelTypes.PIXELMATRIX);
+            
             tx.success();
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
 
         return true;
     }
 
     /**
-     * ¸ù¾İÍ¼Æ¬Ãû²éÕÒÍ¼Æ¬£¬·µ»Ø°üº¬Í¼Æ¬ĞÅÏ¢µÄImageInfo¶ÔÏó
+     * æ ¹æ®æ–‡ä»¶åï¼Œæ ‡ç­¾åï¼Œè¿”å›å¯¹åº”èŠ‚ç‚¹ï¼Œå¯¹èŠ‚ç‚¹çš„æ“ä½œéœ€è¦åœ¨äº‹åŠ¡ä¸­è¿›è¡Œ
      * 
-     * @param fileName Èç: shose100001.jpg
+     * @param fileName
+     * @param labelName
      * @return
      */
-    public ImageInfo findOne(String fileName) {
-        return find(fileName).get(0);
+    public Node findOneNode(String fileName,String labelName) {
+        Node node = null;
+        try (Transaction tx = db.beginTx()) {
+            Label imageLabel = DynamicLabel.label(labelName);
+            node = db.findNode(imageLabel, "fileName", fileName);
+            tx.success();
+        }
+        return node;
     }
-    
-    public List<ImageInfo> find(String... fileNames) {
-        List<ImageInfo> list = new ArrayList<ImageInfo>();
+
+    /**
+     * æ ¹æ®æ–‡ä»¶åæŸ¥æ‰¾ï¼Œè¿”å›ImageByteå¯¹è±¡
+     * @param fileName
+     * @return
+     */
+    public ImageByte findOneByte(String fileName) {
+        ImageByte image = new ImageByte();
+
         try (Transaction tx = db.beginTx()) {
             Label imageLabel = DynamicLabel.label("Image");
-            for (String fileName : fileNames) {
-                ImageInfo image = new ImageInfo();
+            Node node = db.findNode(imageLabel, "fileName", fileName);
+            if (node == null) {
+                System.out.println(fileName + " ä¸å­˜åœ¨");
+                return null;
+            }
+
+            image.setFileName(fileName);
+            image.setImageByteArray((byte[]) (node.getProperty("imageByteArray")));
+           
+            tx.success();
+        } 
+        return image;
+    }
+    
+    /**
+     * æ ¹æ®æ–‡ä»¶åæŸ¥æ‰¾ï¼Œè¿”å›ImagePixArrayå¯¹è±¡
+     * @param fileName
+     * @return
+     */
+    public ImagePixArray findOnePixArr(String fileName) {
+        ImagePixArray image = new ImagePixArray();
+
+        try (Transaction tx = db.beginTx()) {
+            Label pixArrLabel = DynamicLabel.label("PixelArray");
+            Node node = db.findNode(pixArrLabel, "fileName", fileName);
+            if (node == null) {
+                System.out.println(fileName + " ä¸å­˜åœ¨");
+                return null;
+            }
+            image.setFileName(fileName);
+            image.setImageType((int)node.getProperty("imageType"));
+            image.setWidth((int)node.getProperty("width"));
+            image.setHeight((int)node.getProperty("height"));
+            image.setPixelArray((int[])node.getProperty("pixelArray"));
+            
+            tx.success();
+        } 
+        
+        return image;
+    }
+    
+    /**
+     * æ ¹æ®æ–‡ä»¶åæŸ¥æ‰¾ï¼Œè¿”å›ImagePixMatrixå¯¹è±¡
+     * @param fileName
+     * @return
+     */
+    public ImagePixMatrix findOnePixMat(String fileName) {
+        ImagePixMatrix image = new ImagePixMatrix();
+
+        try (Transaction tx = db.beginTx()) {
+            Label pixMatLabel = DynamicLabel.label("PixelMatrix");
+            Node node = db.findNode(pixMatLabel, "fileName", fileName);
+            if (node == null) {
+                System.out.println(fileName + " ä¸å­˜åœ¨");
+                return null;
+            }
+            image.setFileName(fileName);
+            image.setPixelMatrix((int[][])node.getProperty("pixelMatix"));
+        
+            tx.success();
+        } 
+        return image;
+    }
+
+    /**
+     * æ ¹æ®åŒ…å«æ–‡ä»¶åçš„æ•°ç»„ï¼Œè¿”å›åŒ…å«ImageByteå¯¹è±¡çš„list
+     * @param fileNameArray
+     * @return
+     */
+    public List<ImageByte> findImgByteList(String[] fileNameArray) {
+        List<ImageByte> list = new ArrayList<ImageByte>();
+        try (Transaction tx = db.beginTx()) {
+            Label imageLabel = DynamicLabel.label("Image");
+            for (String fileName : fileNameArray) {
+                ImageByte image = new ImageByte();
                 Node node = db.findNode(imageLabel, "fileName", fileName);
                 if (node == null) {
-                    System.out.println(fileName + " ²»´æÔÚ");
+                    System.out.println(fileName + " ä¸å­˜åœ¨");
                     continue;
                 }
 
                 image.setFileName(fileName);
-                image.setFormatType((String) (node.getProperty("formatType")));
-                image.setImageType((int) (node.getProperty("imageType")));
-                image.setWidth((int) (node.getProperty("width")));
-                image.setHeight((int) (node.getProperty("height")));
-                image.setMinx((int) (node.getProperty("minx")));
-                image.setMiny((int) (node.getProperty("miny")));
-                image.setPixelArray((int[]) (node.getProperty("pixelArray")));
+                image.setImageByteArray((byte[]) (node.getProperty("imageByteArray")));
 
                 list.add(image);
             }
@@ -155,76 +255,148 @@ public class ImageDao {
 
         return list;
     }
+    
+    /**
+     * æ ¹æ®åŒ…å«æ–‡ä»¶åçš„æ•°ç»„ï¼Œè¿”å›åŒ…å«ImagePixArrayå¯¹è±¡çš„list
+     * @param fileNameArray
+     * @return
+     */
+    public List<ImagePixArray> findImgPixArrList(String[] fileNameArray) {
+        List<ImagePixArray> list = new ArrayList<ImagePixArray>();
+        try (Transaction tx = db.beginTx()) {
+        	Label pixArrLabel = DynamicLabel.label("PixelArray");
+            for (String fileName : fileNameArray) {
+            	ImagePixArray image = new ImagePixArray();
+                Node node = db.findNode(pixArrLabel, "fileName", fileName);
+                if (node == null) {
+                    System.out.println(fileName + " ä¸å­˜åœ¨");
+                    continue;
+                }
+
+                image.setFileName(fileName);
+                image.setImageType((int)node.getProperty("imageType"));
+                image.setWidth((int)node.getProperty("width"));
+                image.setHeight((int)node.getProperty("height"));
+                image.setPixelArray((int[])node.getProperty("pixelArray"));
+
+                list.add(image);
+            }
+            tx.success();
+        }
+
+        return list;
+    }
+    
+    /**
+     * æ ¹æ®åŒ…å«æ–‡ä»¶åçš„æ•°ç»„ï¼Œè¿”å›åŒ…å«ImagePixMatrixå¯¹è±¡çš„list
+     * @param fileNameArray
+     * @return
+     */
+    public List<ImagePixMatrix> findImgPixMatList(String[] fileNameArray) {
+        List<ImagePixMatrix> list = new ArrayList<ImagePixMatrix>();
+        try (Transaction tx = db.beginTx()) {
+        	Label pixArrLabel = DynamicLabel.label("PixelArray");
+            for (String fileName : fileNameArray) {
+            	ImagePixMatrix image = new ImagePixMatrix();
+                Node node = db.findNode(pixArrLabel, "fileName", fileName);
+                if (node == null) {
+                    System.out.println(fileName + " ä¸å­˜åœ¨");
+                    continue;
+                }
+
+                image.setFileName(fileName);
+                image.setPixelMatrix((int[][])node.getProperty("pixelMatix"));
+
+                list.add(image);
+            }
+            tx.success();
+        }
+
+        return list;
+    }
+    
 
     /**
-     * ¸Ã·½·¨ÔİÊ±²»Ìá¹©
+     * è¯¥æ–¹æ³•æš‚æ—¶ä¸æä¾›
      */
-    public void getAllNodes() {
+    public List<String> getAllNodesName() {
+        List<String> list = new ArrayList<String>();
         try (Transaction tx = db.beginTx()) {
             Iterable<Node> nodesIt = GlobalGraphOperations.at(db).getAllNodes();
             Iterator<Node> nodes = nodesIt.iterator();
             while (nodes.hasNext()) {
                 Node node = nodes.next();
                 String fileName = (String) node.getProperty("fileName");
+                list.add(fileName);
                 System.out.println(fileName);
             }
             tx.success();
         }
+        return list;
+    }
+
+    public List<String> getAllNodesNameWithLabel(String labelName) {
+        List<String> list = new ArrayList<String>();
+        try (Transaction tx = db.beginTx()) {
+            Label label = DynamicLabel.label(labelName);
+            Iterable<Node> nodesIt = GlobalGraphOperations.at(db).getAllNodesWithLabel(label);
+            Iterator<Node> nodes = nodesIt.iterator();
+            while (nodes.hasNext()) {
+                Node node = nodes.next();
+                String fileName = (String) node.getProperty("fileName");
+                list.add(fileName);
+                // System.out.println(fileName);
+            }
+            tx.success();
+        }
+        return list;
     }
 
     /**
-     * ¸ù¾İÎÄ¼şÃû£¬²éÕÒÊı¾İ¿âÖĞÊÇ·ñ´æÔÚ
+     * æ ¹æ®æ–‡ä»¶åï¼ŒæŸ¥æ‰¾æ•°æ®åº“ä¸­å¯¹åº”èŠ‚ç‚¹æ˜¯å¦å­˜åœ¨
      * 
-     * @param fileName Èç£ºshose100001.jpg
+     * @param fileName å¦‚ï¼šshose100001.jpg
      * @return
      */
-    public boolean isExsit(String fileName) {
+    public boolean isExsit(String fileName,String labelName) {
         try (Transaction tx = db.beginTx()) {
-            Label imageLabel = DynamicLabel.label("Image");
+            Label imageLabel = DynamicLabel.label(labelName);
             Node node = db.findNode(imageLabel, "fileName", fileName);
-
             if (node == null) {
-                System.out.println(fileName + " ²»´æÔÚ");
+                System.out.println(fileName + " ä¸å­˜åœ¨");
                 return false;
             }
+            tx.success();
         }
         return true;
     }
 
+
     /**
-     * ¸ù¾İÎÄ¼şÃû£¬²éÕÒÊı¾İ¿âÖĞÊÇ·ñ´æÔÚ,Èç¹û´æÔÚÉ¾³ı¶ÔÓ¦½Úµã
+     * æ ¹æ®æ–‡ä»¶åï¼ŒæŸ¥æ‰¾æ•°æ®åº“ä¸­å¯¹åº”èŠ‚ç‚¹æ˜¯å¦å­˜åœ¨,å¦‚æœå­˜åœ¨åˆ é™¤å¯¹åº”èŠ‚ç‚¹
      * 
-     * @param fileName Èç£ºshose100001.jpg
+     * @param fileName å¦‚ï¼šshose100001.jpg
      * @return
      */
-    public boolean delete(String fileName) {
+    public boolean delete(String fileName,String labelName) {
 
         try (Transaction tx = db.beginTx()) {
-            Label imageLabel = DynamicLabel.label("Image");
+            Label imageLabel = DynamicLabel.label(labelName);
             Node node = db.findNode(imageLabel, "fileName", fileName);
             if (node == null) {
-                System.out.println(fileName + " ²»´æÔÚ");
+                System.out.println(fileName + " ä¸å­˜åœ¨");
                 return false;
             } else {
                 node.delete();
             }
-
+            tx.success();
         }
         return true;
     }
 
-    public void checkIndex() {
-        try (Transaction tx = db.beginTx()) {
-            Label label = DynamicLabel.label("Image");
-            for (IndexDefinition indexDefinition : db.schema().getIndexes(label)) {
-                String indexName = indexDefinition.getLabel().name();
-                System.out.println(indexName);
-            }
-            tx.success();
-        }
-    }
 
-    // ¹Ø±ÕÊı¾İ¿â
+
+    // å…³é—­æ•°æ®åº“
     public void shutDown() {
         System.out.println();
         System.out.println("Shutting down database ...");
@@ -233,7 +405,7 @@ public class ImageDao {
         // END SNIPPET: shutdownServer
     }
 
-    // ×¢²á¹Ø±ÕÊÂ¼ş
+    // æ³¨å†Œå…³é—­äº‹ä»¶
     private static void registerShutdownHook(final GraphDatabaseService graphDb) {
         // Registers a shutdown hook for the Neo4j instance so that it
         // shuts down nicely when the VM exits (even if you "Ctrl-C" the
@@ -246,12 +418,12 @@ public class ImageDao {
         });
     }
     /**
-     *  ±¸·İÊı¾İ¿â
-     * @param dbAddr ĞèÒª±¸·İDB¿âµØÖ·
-     * @param backupPath ±¸·İÄ¿Â¼
+     *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½
+     * @param dbAddr ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½DBï¿½ï¿½ï¿½Ö·
+     * @param backupPath ï¿½ï¿½ï¿½ï¿½Ä¿Â¼
      * @author towan	
      * @Email  tongwenzide@163.com
-     * 2015Äê1ÔÂ24ÈÕÏÂÎç5:15:44
+     * 2015ï¿½ï¿½1ï¿½ï¿½24ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½5:15:44
      */
     public void  backup(String dbAddr,String backupPath){
         OnlineBackup backup = OnlineBackup.from( dbAddr );

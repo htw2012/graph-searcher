@@ -1,20 +1,19 @@
 /*
- * Copyright Lenovo  @ 2015 °æÈ¨ËùÓÐ
+ * Copyright Lenovo  @ 2015 ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 package com.pic.model;
 
 /**
- * <p>(ÓÃÒ»¾ä»°ÃèÊö¸ÃÎÄ¼þ×öÊ²Ã´)</p>
+ * <p>(ï¿½ï¿½Ò»ï¿½ä»°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ê²Ã´)</p>
  * @author jiahc1
  * @Email  jiahc1@lenovo.com
- * 2015-1-17ÏÂÎç7:43:04
+ * 2015-1-17ï¿½ï¿½ï¿½ï¿½7:43:04
  *
  * @version V1.0  
  */
-public class ImageInfo {
+public class ImagePixArray {
     
     private String fileName;
-    private String formatType;
     private int imageType;
     private int width;
     private int height;
@@ -26,12 +25,6 @@ public class ImageInfo {
     }
     public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-    public String getFormatType() {
-        return formatType;
-    }
-    public void setFormatType(String formatType) {
-        this.formatType = formatType;
     }
     public int getImageType() {
         return imageType;

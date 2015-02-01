@@ -1,93 +1,63 @@
 package com.pic.util;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.pic.model.ImageInfo;
+import com.pic.model.ImageByte;
 
 public class ImageUtil {
 
-    /**
-     * ¸ù¾İimage¶ÔÏó°üº¬µÄÍ¼Æ¬ĞÅÏ¢ÖØ½¨Í¼Æ¬
+	 /**
+     * æ ¹æ®imageå¯¹è±¡åŒ…å«çš„å›¾ç‰‡ä¿¡æ¯é‡å»ºå›¾ç‰‡
      * @param image
-     * @param outPath Í¼Æ¬Éú³ÉµÄ¾ø¶ÔÂ·¾¶ £¨ÎÄ¼ş¼Ğ£©
+     * @param outPath å›¾ç‰‡ç”Ÿæˆçš„ç»å¯¹è·¯å¾„ ï¼ˆæ–‡ä»¶å¤¹ï¼‰
      * @return
      */
-    public static boolean createImage(ImageInfo image, String outPath) {
+    public static boolean createImage(ImageByte image) {
         if (image == null) {
-            System.out.println("map ÊäÈëÎª null");
+            System.out.println("map è¾“å…¥ä¸º null");
             return false;
         }
-        OutputStream output = null;
         String fileName = image.getFileName();
-        int imageType = image.getImageType();
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int scansize = width;
-        int minx = image.getMinx();
-        int miny = image.getMiny();
-        int[] pixelArray = image.getPixelArray();
-        String formatType = image.getFormatType();
+        String formatType = fileName.substring(fileName.lastIndexOf(".") + 1);
         try {
-            File file = new File(outPath+"\\"+fileName);
-            if (!file.exists()) {
-                File dir = file.getParentFile();
-                if (!dir.exists()) dir.mkdirs();
-                file.createNewFile();
-            } else {
-                System.out.println("Í¼Æ¬ÒÑ´æÔÚ");
+            File file = new File(System.getProperty("user.dir") + "/generateImg/" + fileName);
+            if (file.exists()) {
+                System.out.println("å›¾ç‰‡å·²å­˜åœ¨");
                 return false;
-            }
-
-            output = new FileOutputStream(file);
-            BufferedImage imgOut = new BufferedImage(width, height, imageType);
-            // offset ÔİÊ±Éè¶¨Îª0
-            // imgOut.setRGB(minx, miny, width, height, pixelArray, offset, scansize);
-            imgOut.setRGB(minx, miny, width, height, pixelArray, 0, scansize);
-            ImageIO.write(imgOut, formatType, output);
+            }       
+            BufferedImage bi =ImageIO.read(new ByteArrayInputStream(image.getImageByteArray()));      
+  
+            ImageIO.write(bi, formatType, file);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        } finally {
-            if (output != null) try {
-                output.close();
-            } catch (IOException e) {
-
-            }
-        }
+        } 
         return true;
     }
 
     /**
-     * ÅúÁ¿ÖØ½¨Í¼Ïñ
+     * æ‰¹é‡é‡å»ºå›¾åƒ
      * @param imageList
-     * @param folder  ÔÚÏîÄ¿Ö÷Ä¿Â¼ÏÂÉú³É¸ÃÎÄ¼ş¼Ğ
+     * @param folder  åœ¨é¡¹ç›®ä¸»ç›®å½•ä¸‹ç”Ÿæˆè¯¥æ–‡ä»¶å¤¹
      * @return
      */
-    public static boolean createImageBatch(List<ImageInfo> imageList, String folder) {
+    public static boolean createImageBatch(List<ImageByte> imageList, String folder) {
         if (imageList == null) {
-            System.out.println("imageList ÊäÈëÎª null");
+            System.out.println("imageList è¾“å…¥ä¸º null");
             return false;
         }
-        OutputStream output = null;
+        ByteArrayInputStream bais = null;
         try {
-            for (ImageInfo image : imageList) {
+            for (ImageByte image : imageList) {
                 String fileName = image.getFileName();
-                int imageType = image.getImageType();
-                int width = image.getWidth();
-                int height = image.getHeight();
-                int scansize = width;
-                int minx = image.getMinx();
-                int miny = image.getMiny();
-                int[] pixelArray = image.getPixelArray();
-                String formatType = image.getFormatType();
-
+                String formatType = fileName.substring(fileName.lastIndexOf(".") + 1);
+                byte[] imageByteArray = image.getImageByteArray();
                 File file =
                         new File(System.getProperty("user.dir") + "\\" + folder + "\\" + fileName);
                 if (!file.exists()) {
@@ -95,30 +65,27 @@ public class ImageUtil {
                     if (!dir.exists()) dir.mkdirs();
                     file.createNewFile();
                 } else {
-                    System.out.println("Í¼Æ¬ÒÑ´æÔÚ");
+                    System.out.println("å›¾ç‰‡å·²å­˜åœ¨");
                     return false;
                 }
 
-                output = new FileOutputStream(file);
-                BufferedImage imgOut = new BufferedImage(width, height, imageType);
-                // offset ÔİÊ±Éè¶¨Îª0
-                // imgOut.setRGB(minx, miny, width, height, pixelArray, offset, scansize);
-                imgOut.setRGB(minx, miny, width, height, pixelArray, 0, scansize);
-                ImageIO.write(imgOut, formatType, output);
+                bais = new ByteArrayInputStream(imageByteArray);      
+                BufferedImage bi =ImageIO.read(bais);      
+      
+                ImageIO.write(bi, formatType, file);
             }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         } finally {
-            if (output != null) try {
-                output.close();
+            if (bais != null) try {
+                bais.close();
             } catch (IOException e) {
 
             }
         }
         return true;
     }
-
 
 
 }

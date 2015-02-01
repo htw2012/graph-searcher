@@ -1,19 +1,19 @@
 /*
- * Copyright ±±¾©º½¿Õº½Ìì´óÑ§  @ 2015 °æÈ¨ËùÓĞ
+ * Copyright ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õºï¿½ï¿½ï¿½ï¿½Ñ§  @ 2015 ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 package com.pic.util;
 
 /**
- * <p>Í¼Æ¬µÄÅäÖÃÀà</p>
+ * <p>Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</p>
  * @author towan
  * @Email  tongwenzide@163.com
- * 2015Äê1ÔÂ21ÈÕÏÂÎç9:14:28
+ * 2015ï¿½ï¿½1ï¿½ï¿½21ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½9:14:28
  *
  * @version V1.0  
  */
 public class ImageConfiguration {
 
-    public static String ImgStoreDir = "192.168.1.127";//"172.31.12.22:7474";//"datas";
+    public static String ImgStoreDir = "datas";
     
     public static String ImgSourceFolder = "images";
 }

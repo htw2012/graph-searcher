@@ -1,15 +1,17 @@
 /*
- * Copyright Lenovo  @ 2015 °æÈ¨ËùÓÐ
+ * Copyright Lenovo  @ 2015 ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 package com.pic.test;
 
 import com.pic.dao.ImageDao;
+import com.pic.model.ImagePixArray;
+import com.pic.util.ImageUtil;
 
 /**
  * <p>(ss</p>
  * @author jiahc1
  * @Email  jiahc1@lenovo.com
- * 2015-1-17ÏÂÎç5:23:50
+ * 2015-1-17ï¿½ï¿½ï¿½ï¿½5:23:50
  *
  * @version V1.0  
  */
@@ -20,16 +22,16 @@ public class Test4 {
 		ImageDao dao = ImageDao.getInstance();
 //		dao.saveAll("contest_data");
 		
-//		String imgName = "shoes_100003.jpg";
+//		String imgName = "clothes_250001.jpg";
 //		long start = System.currentTimeMillis();
 //		ImageInfo image = dao.findOne(imgName);
 //		long end = System.currentTimeMillis();
 //		System.out.println(end - start);
 //		
-//		boolean b = ImageUtil.createImage(image, "D:/temp/"+imgName);
+//		boolean b = ImageUtil.createImage(image, "E:/temp");
 //		System.out.println(b);
 		
-//		dao.getAllNodes();
+		dao.getAllNodesName();
 		
 //		dao.saveOne("1.jpg");
 		

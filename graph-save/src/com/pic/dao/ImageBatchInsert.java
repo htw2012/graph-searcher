@@ -1,9 +1,10 @@
 /*
- * Copyright Lenovo @ 2015 °æÈ¨ËùÓĞ
+ * Copyright Lenovo @ 2015 ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 package com.pic.dao;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,15 +17,16 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
 
+import com.pic.model.RelTypes;
 import com.pic.util.ImageConfiguration;
 
 /**
  * <p>
- * (ÅúÁ¿²åÈë´óÎÄ¼ş£¬ÓĞÓÃÃ»ÓĞÊÂÎñ±£Ö¤£¬ËùÒÔ¸Ã·½·¨²»°²È«)
+ * (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½Ô¸Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«)
  * </p>
  * 
  * @author jiahc1
- * @Email jiahc1@lenovo.com 2015-1-21ÏÂÎç4:25:24
+ * @Email jiahc1@lenovo.com 2015-1-21ï¿½ï¿½ï¿½ï¿½4:25:24
  *
  * @version V1.0
  */
@@ -38,87 +40,107 @@ public class ImageBatchInsert {
     }
 
     /**
-     * ¸ù¾İÍ¼Æ¬Ãû´æ´¢Í¼Æ¬£¬»òÕß¸ù¾İÎÄ¼ş¼ĞÃû´æ´¢ÎÄ¼ş¼ĞÏÂµÄËùÓĞÍ¼Æ¬
+     * æ ¹æ®å›¾ç‰‡åå­˜å‚¨å›¾ç‰‡ï¼Œæˆ–è€…æ ¹æ®æ–‡ä»¶å¤¹åå­˜å‚¨æ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰å›¾ç‰‡,ç”Ÿæˆä¸modelä¸‹å¯¹åº”çš„NodeèŠ‚ç‚¹
      * 
-     * @param folder Èç£ºshose100001.jpg ¡¢contest_data
+     * @param folder å¦‚ï¼šshose100001.jpg ã€contest_data
      * @return
      */
     public boolean saveAll(String folder) {
         File headFile = new File(System.getProperty("user.dir") + "\\" + folder);
         if (!headFile.exists()) {
-            System.out.println("Ä¿±êÎÄ¼ş¼Ğ²»´æÔÚ");
+            System.out.println("ç›®æ ‡æ–‡ä»¶å¤¹ä¸å­˜åœ¨");
             return false;
         }
 
         Label imageLabel = DynamicLabel.label("Image");
+        Label pixArrLabel = DynamicLabel.label("PixelArray");
+        Label pixMatLabel = DynamicLabel.label("pixelMatix");
         db.createDeferredSchemaIndex(imageLabel).on("fileName").create();
+        db.createDeferredSchemaIndex(pixArrLabel).on("fileName").create();
+        db.createDeferredSchemaIndex(pixMatLabel).on("fileName").create();
 
-        saveAll(headFile, imageLabel);
+      //  RelationshipType contain = DynamicRelationshipType.withName("CONTAIN");
+
+        saveAll(headFile, imageLabel, pixArrLabel,pixMatLabel);
 
         return true;
     }
 
 
-    // Ä¿±êÎÄ¼ş´æ´¢£¬file¿ÉÒÔÎªÄ¿Â¼ºÍÎÄ¼ş
-    private boolean saveAll(File file, Label label) {
+    // ç›®æ ‡æ–‡ä»¶å­˜å‚¨ï¼Œfileå¯ä»¥ä¸ºç›®å½•å’Œæ–‡ä»¶
+    private boolean saveAll(File file, Label imageLabel, Label pixArrLabel,Label pixMatLabel) {
 
         if (file.isFile()) {
-
             String fileName = file.getName();
-
-            System.out.println(fileName + "ÕıÔÚ´æ´¢");
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("fileName", fileName);
-
+            System.out.println(fileName);
+            Map<String, Object> imageProperties = new HashMap<>();
+            Map<String, Object> pixArrProperties = new HashMap<>();
+            Map<String, Object> pixMatProperties = new HashMap<>();
+           
+            imageProperties.put("fileName", fileName);
+            pixArrProperties.put("fileName", fileName);
+            pixMatProperties.put("fileName", fileName);
+            
             String formatType = fileName.substring(fileName.lastIndexOf(".") + 1);
-            properties.put("formatType", formatType);
             BufferedImage image = null;
             try {
                 image = ImageIO.read(file);
+                if (image == null) {
+                    System.out.println("å›¾ç‰‡è¯»å–å¤±è´¥ï¼Œè¯·æ£€æŸ¥å›¾ç‰‡");
+                    return false;
+                }
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(image, formatType, baos);
+                byte[] imageByteArray = baos.toByteArray();
+                imageProperties.put("imageByteArray", imageByteArray);
+
+                int imageType = image.getType();
+                pixArrProperties.put("imageType", imageType);
+                int width = image.getWidth();
+                int height = image.getHeight();
+                pixArrProperties.put("width", width);
+                pixArrProperties.put("height", height);
+                int minx = image.getMinX();
+                int miny = image.getMinY();
+                pixArrProperties.put("minx", minx);
+                pixArrProperties.put("miny", miny);
+                int offset = 0;
+                int scansize = width;
+                int[] pixelArray = new int[offset + (height - miny) * scansize];
+                image.getRGB(minx, miny, width, height, pixelArray, offset, scansize);
+                pixArrProperties.put("pixelArray", pixelArray);
+                
+                int[][] pixelMatrix = new int[width][height];
+//                int k = 0;
+                for(int i=0;i<width;i++){  
+                    for(int j=0;j<height;j++){ 
+                    	
+//                        pixelMatrix[i][j] = pixelArray[k];  
+//                        k++; 
+                    	pixelMatrix[i][j] = image.getRGB(i, j);
+                    }  
+                }
+                pixMatProperties.put("pixelMatix", pixelMatrix);
+                
+                long imagel = db.createNode(imageProperties, imageLabel);
+                long pixArr = db.createNode(pixArrProperties, pixArrLabel);
+                long pixMat = db.createNode(pixMatProperties, pixMatLabel);
+                db.createRelationship(imagel, pixArr, RelTypes.PIXELARRAY, null);
+                db.createRelationship(imagel, pixMat, RelTypes.PIXELMATRIX, null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            if (image == null) {
-                System.out.println("Í¼Æ¬¶ÁÈ¡Ê§°Ü£¬Çë¼ì²éÍ¼Æ¬");
-                return false;
-            }
-            int imageType = image.getType();
-            properties.put("imageType", imageType);
-
-            int width = image.getWidth();
-            int height = image.getHeight();
-            properties.put("width", width);
-            properties.put("height", height);
-
-            int minx = image.getMinX();
-            int miny = image.getMinY();
-            properties.put("minx", minx);
-            properties.put("miny", miny);
-
-            int offset = 0;
-            int scansize = width;
-
-            int[] pixelArray = new int[offset + (height - miny) * scansize];
-            image.getRGB(minx, miny, width, height, pixelArray, offset, scansize);
-
-            properties.put("pixelArray", pixelArray);
-
-            db.createNode(properties, label);
-
         } else {
-            System.out.println(file.getName() + ":ÎÄ¼ş¼ĞÕıÔÚ´æ´¢");
+            System.out.println(file.getName() + ":æ–‡ä»¶å¤¹æ­£åœ¨å­˜å‚¨");
             File[] subFiles = file.listFiles();
             for (File subFile : subFiles) {
-                saveAll(subFile, label);
+                saveAll(subFile, imageLabel, pixArrLabel,pixMatLabel);
             }
         }
-
         return true;
-
     }
 
-    // ¹Ø±ÕÊı¾İ¿â
+    // å…³é—­æ•°æ®åº“
     public void shutDown() {
         System.out.println();
         System.out.println("Shutting down database ...");
@@ -126,7 +148,5 @@ public class ImageBatchInsert {
         db.shutdown();
         // END SNIPPET: shutdownServer
     }
-
-
 
 }

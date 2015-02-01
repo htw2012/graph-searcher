@@ -1,35 +1,32 @@
 /*
- * Copyright ±±¾©º½¿Õº½Ìì´óÑ§  @ 2015 °æÈ¨ËùÓĞ
+ * Copyright åŒ—äº¬èˆªç©ºèˆªå¤©å¤§å­¦  @ 2015 ç‰ˆæƒæ‰€æœ‰
  */
 package com.pic.demo;
 
 import java.io.IOException;
-import java.util.Arrays;
-
 import org.junit.Test;
-
 import com.pic.dao.ImageBatchInsert;
 import com.pic.dao.ImageDao;
-import com.pic.model.ImageInfo;
+import com.pic.model.ImagePixArray;
 import com.pic.util.ImageConfiguration;
 import com.pic.util.JsonUtil;
 
 /**
- * <p>Í¼Æ¬µÄÊı¾İµÄ´æ´¢¡¢²éÑ¯µÄ°ü×°Àà</p>
+ * <p>å›¾ç‰‡çš„æ•°æ®çš„å­˜å‚¨ã€æŸ¥è¯¢çš„åŒ…è£…ç±»</p>
  * @author towan
  * @Email  tongwenzide@163.com
- * 2015Äê1ÔÂ21ÈÕÏÂÎç9:26:48
+ * 2015å¹´1æœˆ21æ—¥ä¸‹åˆ9:26:48
  *
  * @version V1.0  
  */
 public class ImgWrapper {
     
     /**
-     * ÅúÁ¿¼ÓÔØÍ¼Æ¬µ½Êı¾İ¿âÖĞ
-     * @param folderDir ´æ´¢Í¼Æ¬ÎÄ¼ş¼ĞÂ·¾¶
+     * æ‰¹é‡åŠ è½½å›¾ç‰‡åˆ°æ•°æ®åº“ä¸­
+     * @param folderDir å­˜å‚¨å›¾ç‰‡æ–‡ä»¶å¤¹è·¯å¾„
      * @author towan	
      * @Email  tongwenzide@163.com
-     * 2015Äê1ÔÂ21ÈÕÏÂÎç9:28:27
+     * 2015å¹´1æœˆ21æ—¥ä¸‹åˆ9:28:27
      */
     public static void loadImages(String folderDir){
         ImageBatchInsert dao = new ImageBatchInsert();
@@ -37,16 +34,18 @@ public class ImgWrapper {
         dao.shutDown();
     }
     /**
-     * µ¥ÕÅÍ¼Æ¬µÄ²éÑ¯
-     * @param imgName Í¼Æ¬Ãû³Æ
+     * å•å¼ å›¾ç‰‡çš„æŸ¥è¯¢
+     * @param imgName å›¾ç‰‡åç§°
      * @return
      * @author towan	
      * @Email  tongwenzide@163.com
-     * 2015Äê1ÔÂ21ÈÕÏÂÎç9:35:59
+     * 2015å¹´1æœˆ21æ—¥ä¸‹åˆ9:35:59
      */
-    public static ImageInfo getImage(String imgName){
+    public static ImagePixArray getImage(String imgName){
         ImageDao imgDao = ImageDao.getInstance();
-        return imgDao.findOne(imgName);
+        ImagePixArray findOne = imgDao.findOnePixArr(imgName);
+        imgDao.shutDown();
+		return findOne;
     }
     
     @Test
@@ -55,10 +54,8 @@ public class ImgWrapper {
     }
     @Test
     public void testQueryImage() throws IOException{
-        ImageInfo image = getImage("clothes_250003.jpg");
-        System.out.println("Image size:"+image.getPixelArray().length);
-        System.out.println("Image Pixel:"+Arrays.toString(image.getPixelArray()));
-//        String json = JsonUtil.toJson(image);
-//        System.out.println("ImageInfo:\n"+json);
+        ImagePixArray image = getImage("clothes_250001.jpg");
+        String json = JsonUtil.toJson(image);
+        System.out.println("ImageInfo:"+json);
     }
 }
