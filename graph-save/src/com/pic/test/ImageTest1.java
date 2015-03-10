@@ -68,7 +68,7 @@ public class ImageTest1 {
 		return map;
 	}
 	
-	public static boolean creatImg(Map map,String outPath)
+	public static boolean creatImg(Map<String,Object> map,String outPath)
 	{
 		File file = new File(outPath);
 		int type = (int)map.get("type");

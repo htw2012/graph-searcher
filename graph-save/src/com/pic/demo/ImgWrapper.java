@@ -4,12 +4,13 @@
 package com.pic.demo;
 
 import java.io.IOException;
+
 import org.junit.Test;
+
 import com.pic.dao.ImageBatchInsert;
 import com.pic.dao.ImageDao;
 import com.pic.model.ImagePixArray;
 import com.pic.util.ImageConfiguration;
-import com.pic.util.JsonUtil;
 
 /**
  * <p>图片的数据的存储、查询的包装类</p>
@@ -55,7 +56,7 @@ public class ImgWrapper {
     @Test
     public void testQueryImage() throws IOException{
         ImagePixArray image = getImage("clothes_250001.jpg");
-        String json = JsonUtil.toJson(image);
-        System.out.println("ImageInfo:"+json);
+//        String json = JsonUtil.toJson(image);
+        System.out.println("ImageInfo:"+image);
     }
 }
