@@ -3,9 +3,6 @@ package edu.buaa.software.util;
 /**
  * 计时的测试工具
  * 
- * @author jiqunpeng
- * 
- *         创建时间：2014-7-8 下午8:21:56
  */
 public class TimedTest {
     private int repeat;

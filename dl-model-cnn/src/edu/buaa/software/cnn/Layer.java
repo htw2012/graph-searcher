@@ -8,14 +8,10 @@ import edu.buaa.software.util.Util;
 /**
  * cnn网络的层
  * 
- * @author jiqunpeng
  * 
- *         创建时间：2014-7-8 下午3:58:46
  */
 public class Layer implements Serializable {
-    /**
-	 * 
-	 */
+   
     private static final long serialVersionUID = -5747622503947497069L;
     private LayerType type;// 层的类型
     private int outMapNum;// 输出map的个数
@@ -182,9 +178,6 @@ public class Layer implements Serializable {
     /**
      * 卷积核或者采样层scale的大小,长与宽可以不等.类型安全，定以后不可修改
      * 
-     * @author jiqunpeng
-     * 
-     *         创建时间：2014-7-8 下午4:11:00
      */
     public static class Size implements Serializable {
 

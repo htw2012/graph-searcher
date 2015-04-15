@@ -7,7 +7,7 @@ import edu.buaa.software.util.ConcurenceRunner;
 import edu.buaa.software.util.TimedTest;
 import edu.buaa.software.util.TimedTest.TestTask;
 
-public class RunCNN {
+public class CNNDemo {
 
     public static void runCnn() {
         // 创建一个卷积神经网络

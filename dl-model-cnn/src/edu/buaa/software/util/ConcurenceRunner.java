@@ -7,9 +7,6 @@ import java.util.concurrent.Executors;
 /**
  * 并发运行工具
  * 
- * @author jiqunpeng
- * 
- *         创建时间：2014-6-16 下午3:33:41
  */
 public class ConcurenceRunner {
 

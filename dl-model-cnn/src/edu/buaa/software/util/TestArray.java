@@ -7,9 +7,6 @@ import edu.buaa.software.util.TimedTest.TestTask;
 /**
  * 测试元素直接访问数组与通过函数访问数组的效率， 结论：函数形式访问并没有降低速度
  * 
- * @author jiqunpeng
- * 
- *         创建时间：2014-7-9 下午3:18:30
  */
 public class TestArray {
     double[][] data;
@@ -37,10 +34,10 @@ public class TestArray {
     public static void main(String[] args) {
         String a = "aAdfa彭_";
         System.out.println(a.toUpperCase(Locale.CHINA));
-        double[][] d = new double[3][];
+//        double[][] d = new double[3][];
         // d[0] = new double[] { 1,2,3 };
         // d[1] = new double[] { 3,4,5,6 };
-        System.out.println(d[1][3]);
+//        System.out.println(d[1][3]);
         final TestArray t = new TestArray(10000, 1000);
         new TimedTest(new TestTask() {
 

@@ -5,18 +5,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-
 import edu.buaa.software.cnn.Layer.Size;
-import edu.buaa.software.util.TimedTest.TestTask;
-
 public class Util {
 
     /**
      * 矩阵对应元素相乘时在每个元素上的操作
      * 
-     * @author jiqunpeng
      * 
-     *         创建时间：2014-7-9 下午9:28:35
      */
     public interface Operator extends Serializable {
         public double process(double value);

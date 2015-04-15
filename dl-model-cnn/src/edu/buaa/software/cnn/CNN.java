@@ -21,9 +21,7 @@ import edu.buaa.software.util.Util;
 import edu.buaa.software.util.Util.Operator;
 
 public class CNN implements Serializable {
-    /**
-	 * 
-	 */
+    
     private static final long serialVersionUID = 337920299147929932L;
     private static double ALPHA = 0.85;
     protected static final double LAMBDA = 0;
