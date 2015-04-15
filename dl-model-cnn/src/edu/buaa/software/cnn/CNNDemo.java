@@ -23,7 +23,7 @@ public class CNNDemo {
         // 导入数据集
         String fileName = "dataset/train.format";
         Dataset dataset = Dataset.load(fileName, ",", 784);
-        cnn.train(dataset, 3);//
+        cnn.train(dataset, 200);//训练次数
         String modelName = "model/model.cnn";
         cnn.saveModel(modelName);
         dataset.clear();
