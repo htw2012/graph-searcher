@@ -1,7 +1,7 @@
 package edu.buaa.software.util;
 
 /**
- * ¼ÆÊ±µÄ²âÊÔ¹¤¾ß
+ * è®¡æ—¶çš„æµ‹è¯•å·¥å…·
  * 
  */
 public class TimedTest {

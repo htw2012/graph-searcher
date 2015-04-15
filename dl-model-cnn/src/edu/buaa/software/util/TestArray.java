@@ -5,7 +5,7 @@ import java.util.Locale;
 import edu.buaa.software.util.TimedTest.TestTask;
 
 /**
- * 测试元素直接访问数组与通过函数访问数组的效率， 结论：函数形式访问并没有降低速度
+ * 娴嬭瘯鍏冪礌鐩存帴璁块棶鏁扮粍涓庨�氳繃鍑芥暟璁块棶鏁扮粍鐨勬晥鐜囷紝 缁撹锛氬嚱鏁板舰寮忚闂苟娌℃湁闄嶄綆閫熷害
  * 
  */
 public class TestArray {
@@ -32,7 +32,7 @@ public class TestArray {
     }
 
     public static void main(String[] args) {
-        String a = "aAdfa彭_";
+        String a = "aAdfa褰璤";
         System.out.println(a.toUpperCase(Locale.CHINA));
 //        double[][] d = new double[3][];
         // d[0] = new double[] { 1,2,3 };

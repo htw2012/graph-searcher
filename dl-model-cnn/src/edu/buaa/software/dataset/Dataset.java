@@ -10,9 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Dataset {
-    // ±£´æÊı¾İ
+    // ä¿å­˜æ•°æ®
     private List<Record> records;
-    // Àà±ğÏÂ±ê
+    // ç±»åˆ«ä¸‹æ ‡
     private int lableIndex;
 
     private double maxLable = -1;
@@ -48,17 +48,17 @@ public class Dataset {
     }
 
     /**
-     * Çå¿ÕÊı¾İ
+     * æ¸…ç©ºæ•°æ®
      */
     public void clear() {
         records.clear();
     }
 
     /**
-     * Ìí¼ÓÒ»¸ö¼ÇÂ¼
+     * æ·»åŠ ä¸€ä¸ªè®°å½•
      * 
-     * @param attrs ¼ÇÂ¼µÄÊôĞÔ
-     * @param lable ¼ÇÂ¼µÄÀà±ê
+     * @param attrs è®°å½•çš„å±æ€§
+     * @param lable è®°å½•çš„ç±»æ ‡
      */
     public void append(double[] attrs, Double lable) {
         records.add(new Record(attrs, lable));
@@ -69,7 +69,7 @@ public class Dataset {
     }
 
     /**
-     * »ñÈ¡µÚindexÌõ¼ÇÂ¼µÄÊôĞÔ
+     * è·å–ç¬¬indexæ¡è®°å½•çš„å±æ€§
      * 
      * @param index
      * @return
@@ -83,11 +83,11 @@ public class Dataset {
     }
 
     /**
-     * µ¼ÈëÊı¾İ¼¯
+     * å¯¼å…¥æ•°æ®é›†
      * 
-     * @param filePath ÎÄ¼şÃû¼ÓÂ·¾¶
-     * @param tag ×Ö¶Î·Ö¸ô·û
-     * @param lableIndex Àà±êÏÂ±ê£¬´Ó0¿ªÊ¼
+     * @param filePath æ–‡ä»¶ååŠ è·¯å¾„
+     * @param tag å­—æ®µåˆ†éš”ç¬¦
+     * @param lableIndex ç±»æ ‡ä¸‹æ ‡ï¼Œä»0å¼€å§‹
      * @return
      */
     public static Dataset load(String filePath, String tag, int lableIndex) {
@@ -113,19 +113,19 @@ public class Dataset {
             e.printStackTrace();
             return null;
         }
-        System.out.println("µ¼ÈëÊı¾İ:" + dataset.size());
+        System.out.println("å¯¼å…¥æ•°æ®:" + dataset.size());
         return dataset;
     }
 
     /**
-     * Êı¾İ¼ÇÂ¼(ÊµÀı),¼ÇÂ¼ÓÉÊôĞÔºÍÀà±ğ×é³É,Àà±ğ±ØĞëÎªµÚÒ»ÁĞ»òÕß×îºóÒ»ÁĞ»òÕß¿Õ
+     * æ•°æ®è®°å½•(å®ä¾‹),è®°å½•ç”±å±æ€§å’Œç±»åˆ«ç»„æˆ,ç±»åˆ«å¿…é¡»ä¸ºç¬¬ä¸€åˆ—æˆ–è€…æœ€åä¸€åˆ—æˆ–è€…ç©º
      * 
      * @author jiqunpeng
      * 
-     *         ´´½¨Ê±¼ä£º2014-6-15 ÏÂÎç8:03:29
+     *         åˆ›å»ºæ—¶é—´ï¼š2014-6-15 ä¸‹åˆ8:03:29
      */
     public class Record {
-        // ´æ´¢Êı¾İ
+        // å­˜å‚¨æ•°æ®
         private double[] attrs;
         private Double lable;
 
@@ -148,7 +148,7 @@ public class Dataset {
         }
 
         /**
-         * ¸Ã¼ÇÂ¼µÄÊôĞÔ
+         * è¯¥è®°å½•çš„å±æ€§
          * 
          * @return
          */
@@ -166,7 +166,7 @@ public class Dataset {
         }
 
         /**
-         * ¸Ã¼ÇÂ¼µÄÀà±ê
+         * è¯¥è®°å½•çš„ç±»æ ‡
          * 
          * @return
          */
@@ -176,7 +176,7 @@ public class Dataset {
         }
 
         /**
-         * ¶ÔÀà±ê½øĞĞ¶ş½øÖÆ±àÂë
+         * å¯¹ç±»æ ‡è¿›è¡ŒäºŒè¿›åˆ¶ç¼–ç 
          * 
          * @param n
          * @return
@@ -216,7 +216,7 @@ public class Dataset {
     }
 
     /**
-     * »ñÈ¡µÚindexÌõ¼ÇÂ¼
+     * è·å–ç¬¬indexæ¡è®°å½•
      * 
      * @param index
      * @return

@@ -10,7 +10,7 @@ import edu.buaa.software.util.TimedTest.TestTask;
 public class CNNDemo {
 
     public static void runCnn() {
-        // ´´½¨Ò»¸ö¾í»ıÉñ¾­ÍøÂç
+        // åˆ›å»ºä¸€ä¸ªå·ç§¯ç¥ç»ç½‘ç»œ
         LayerBuilder builder = new LayerBuilder();
         builder.addLayer(Layer.buildInputLayer(new Size(28, 28)));
         builder.addLayer(Layer.buildConvLayer(6, new Size(5, 5)));
@@ -20,7 +20,7 @@ public class CNNDemo {
         builder.addLayer(Layer.buildOutputLayer(10));
         CNN cnn = new CNN(builder, 50);
 
-        // µ¼ÈëÊı¾İ¼¯
+        // å¯¼å…¥æ•°æ®é›†
         String fileName = "dataset/train.format";
         Dataset dataset = Dataset.load(fileName, ",", 784);
         cnn.train(dataset, 3);//
@@ -29,7 +29,7 @@ public class CNNDemo {
         dataset.clear();
         dataset = null;
 
-        // Ô¤²â
+        // é¢„æµ‹
         // CNN cnn = CNN.loadModel(modelName);
         Dataset testset = Dataset.load("dataset/test.format", ",", -1);
         cnn.predict(testset, "dataset/test.predict");

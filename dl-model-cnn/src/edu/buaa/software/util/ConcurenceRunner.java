@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * ²¢·¢ÔËĞĞ¹¤¾ß
+ * å¹¶å‘è¿è¡Œå·¥å…·
  * 
  */
 public class ConcurenceRunner {
@@ -57,7 +57,7 @@ public class ConcurenceRunner {
 
         public void start() {
             int runCpu = cpuNum < workLength ? cpuNum : 1;
-            // ·ÖÆ¬³¤¶ÈÏòÉÏÈ¡Õû
+            // åˆ†ç‰‡é•¿åº¦å‘ä¸Šå–æ•´
             final CountDownLatch gate = new CountDownLatch(runCpu);
             int fregLength = (workLength + runCpu - 1) / runCpu;
             for (int cpu = 0; cpu < runCpu; cpu++) {
@@ -75,7 +75,7 @@ public class ConcurenceRunner {
                 };
                 ConcurenceRunner.run(task);
             }
-            try {// µÈ´ıËùÓĞÏß³ÌÅÜÍê
+            try {// ç­‰å¾…æ‰€æœ‰çº¿ç¨‹è·‘å®Œ
                 gate.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -25,28 +25,28 @@ public class CNN implements Serializable {
     private static final long serialVersionUID = 337920299147929932L;
     private static double ALPHA = 0.85;
     protected static final double LAMBDA = 0;
-    // ÍøÂçµÄ¸÷²ã
+    // ç½‘ç»œçš„å„å±‚
     private List<Layer> layers;
-    // ²ãÊı
+    // å±‚æ•°
     private int layerNum;
 
-    // ÅúÁ¿¸üĞÂµÄ´óĞ¡
+    // æ‰¹é‡æ›´æ–°çš„å¤§å°
     private int batchSize;
-    // ³ıÊı²Ù×÷·û£¬¶Ô¾ØÕóµÄÃ¿Ò»¸öÔªËØ³ıÒÔÒ»¸öÖµ
+    // é™¤æ•°æ“ä½œç¬¦ï¼Œå¯¹çŸ©é˜µçš„æ¯ä¸€ä¸ªå…ƒç´ é™¤ä»¥ä¸€ä¸ªå€¼
     private Operator divide_batchSize;
 
-    // ³ËÊı²Ù×÷·û£¬¶Ô¾ØÕóµÄÃ¿Ò»¸öÔªËØ³ËÒÔalphaÖµ
+    // ä¹˜æ•°æ“ä½œç¬¦ï¼Œå¯¹çŸ©é˜µçš„æ¯ä¸€ä¸ªå…ƒç´ ä¹˜ä»¥alphaå€¼
     private Operator multiply_alpha;
 
-    // ³ËÊı²Ù×÷·û£¬¶Ô¾ØÕóµÄÃ¿Ò»¸öÔªËØ³ËÒÔ1-labmda*alphaÖµ
+    // ä¹˜æ•°æ“ä½œç¬¦ï¼Œå¯¹çŸ©é˜µçš„æ¯ä¸€ä¸ªå…ƒç´ ä¹˜ä»¥1-labmda*alphaå€¼
     private Operator multiply_lambda;
 
     /**
-     * ³õÊ¼»¯ÍøÂç
+     * åˆå§‹åŒ–ç½‘ç»œ
      * 
-     * @param layerBuilder ÍøÂç²ã
-     * @param inputMapSize ÊäÈëmapµÄ´óĞ¡
-     * @param classNum Àà±ğµÄ¸öÊı£¬ÒªÇóÊı¾İ¼¯½«Àà±ê×ª»¯Îª0-classNum-1µÄÊıÖµ
+     * @param layerBuilder ç½‘ç»œå±‚
+     * @param inputMapSize è¾“å…¥mapçš„å¤§å°
+     * @param classNum ç±»åˆ«çš„ä¸ªæ•°ï¼Œè¦æ±‚æ•°æ®é›†å°†ç±»æ ‡è½¬åŒ–ä¸º0-classNum-1çš„æ•°å€¼
      */
     public CNN(LayerBuilder layerBuilder, final int batchSize) {
         layers = layerBuilder.mLayers;
@@ -57,7 +57,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ³õÊ¼»¯²Ù×÷·û
+     * åˆå§‹åŒ–æ“ä½œç¬¦
      */
     private void initPerator() {
         divide_batchSize = new Operator() {
@@ -95,17 +95,17 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ÔÚÑµÁ·¼¯ÉÏÑµÁ·ÍøÂç
+     * åœ¨è®­ç»ƒé›†ä¸Šè®­ç»ƒç½‘ç»œ
      * 
      * @param trainset
-     * @param repeat µü´úµÄ´ÎÊı
+     * @param repeat è¿­ä»£çš„æ¬¡æ•°
      */
     public void train(Dataset trainset, int repeat) {
-        // ¼àÌıÍ£Ö¹°´Å¥
+        // ç›‘å¬åœæ­¢æŒ‰é’®
         new Lisenter().start();
         for (int t = 0; t < repeat && !stopTrain.get(); t++) {
             int epochsNum = trainset.size() / batchSize;
-            if (trainset.size() % batchSize != 0) epochsNum++;// ¶à³éÈ¡Ò»´Î£¬¼´ÏòÉÏÈ¡Õû
+            if (trainset.size() % batchSize != 0) epochsNum++;// å¤šæŠ½å–ä¸€æ¬¡ï¼Œå³å‘ä¸Šå–æ•´
             Log.i("");
             Log.i(t + "th iter epochsNum:" + epochsNum);
             int right = 0;
@@ -121,7 +121,7 @@ public class CNN implements Serializable {
                     Layer.prepareForNewRecord();
                 }
 
-                // ÅÜÍêÒ»¸öbatchºó¸üĞÂÈ¨ÖØ
+                // è·‘å®Œä¸€ä¸ªbatchåæ›´æ–°æƒé‡
                 updateParas();
                 if (i % 50 == 0) {
                     System.out.print("..");
@@ -129,7 +129,7 @@ public class CNN implements Serializable {
                 }
             }
             double p = 1.0 * right / count;
-            if (t % 10 == 1 && p > 0.96) {// ¶¯Ì¬µ÷Õû×¼Ñ§Ï°ËÙÂÊ
+            if (t % 10 == 1 && p > 0.96) {// åŠ¨æ€è°ƒæ•´å‡†å­¦ä¹ é€Ÿç‡
                 ALPHA = 0.001 + ALPHA * 0.9;
                 Log.i("Set alpha = " + ALPHA);
             }
@@ -165,7 +165,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ²âÊÔÊı¾İ
+     * æµ‹è¯•æ•°æ®
      * 
      * @param trainset
      * @return
@@ -192,7 +192,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * Ô¤²â½á¹û
+     * é¢„æµ‹ç»“æœ
      * 
      * @param testset
      * @param fileName
@@ -243,7 +243,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ÑµÁ·Ò»Ìõ¼ÇÂ¼£¬Í¬Ê±·µ»ØÊÇ·ñÔ¤²âÕıÈ·µ±Ç°¼ÇÂ¼
+     * è®­ç»ƒä¸€æ¡è®°å½•ï¼ŒåŒæ—¶è¿”å›æ˜¯å¦é¢„æµ‹æ­£ç¡®å½“å‰è®°å½•
      * 
      * @param record
      * @return
@@ -256,7 +256,7 @@ public class CNN implements Serializable {
     }
 
     /*
-     * ·´Ïò´«Êä
+     * åå‘ä¼ è¾“
      */
     private boolean backPropagation(Record record) {
         boolean result = setOutLayerErrors(record);
@@ -265,7 +265,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ¸üĞÂ²ÎÊı
+     * æ›´æ–°å‚æ•°
      */
     private void updateParas() {
         for (int l = 1; l < layerNum; l++) {
@@ -284,7 +284,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ¸üĞÂÆ«ÖÃ
+     * æ›´æ–°åç½®
      * 
      * @param layer
      * @param lastLayer
@@ -299,7 +299,7 @@ public class CNN implements Serializable {
             public void process(int start, int end) {
                 for (int j = start; j < end; j++) {
                     double[][] error = Util.sum(errors, j);
-                    // ¸üĞÂÆ«ÖÃ
+                    // æ›´æ–°åç½®
                     double deltaBias = Util.sum(error) / batchSize;
                     double bias = layer.getBias(j) + ALPHA * deltaBias;
                     layer.setBias(j, bias);
@@ -310,10 +310,10 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ¸üĞÂlayer²ãµÄ¾í»ıºË£¨È¨ÖØ£©ºÍÆ«ÖÃ
+     * æ›´æ–°layerå±‚çš„å·ç§¯æ ¸ï¼ˆæƒé‡ï¼‰å’Œåç½®
      * 
-     * @param layer µ±Ç°²ã
-     * @param lastLayer Ç°Ò»²ã
+     * @param layer å½“å‰å±‚
+     * @param lastLayer å‰ä¸€å±‚
      */
     private void updateKernels(final Layer layer, final Layer lastLayer) {
         int mapNum = layer.getOutMapNum();
@@ -324,13 +324,13 @@ public class CNN implements Serializable {
             public void process(int start, int end) {
                 for (int j = start; j < end; j++) {
                     for (int i = 0; i < lastMapNum; i++) {
-                        // ¶ÔbatchµÄÃ¿¸ö¼ÇÂ¼deltaÇóºÍ
+                        // å¯¹batchçš„æ¯ä¸ªè®°å½•deltaæ±‚å’Œ
                         double[][] deltaKernel = null;
                         for (int r = 0; r < batchSize; r++) {
                             double[][] error = layer.getError(r, j);
                             if (deltaKernel == null)
                                 deltaKernel = Util.convnValid(lastLayer.getMap(r, i), error);
-                            else {// ÀÛ»ıÇóºÍ
+                            else {// ç´¯ç§¯æ±‚å’Œ
                                 deltaKernel =
                                         Util.matrixOp(
                                                 Util.convnValid(lastLayer.getMap(r, i), error),
@@ -338,9 +338,9 @@ public class CNN implements Serializable {
                             }
                         }
 
-                        // ³ıÒÔbatchSize
+                        // é™¤ä»¥batchSize
                         deltaKernel = Util.matrixOp(deltaKernel, divide_batchSize);
-                        // ¸üĞÂ¾í»ıºË
+                        // æ›´æ–°å·ç§¯æ ¸
                         double[][] kernel = layer.getKernel(i, j);
                         deltaKernel =
                                 Util.matrixOp(kernel, deltaKernel, multiply_lambda, multiply_alpha,
@@ -355,7 +355,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ÉèÖÃÖĞ½«¸÷²ãµÄ²Ğ²î
+     * è®¾ç½®ä¸­å°†å„å±‚çš„æ®‹å·®
      */
     private void setHiddenLayerErrors() {
         for (int l = layerNum - 2; l > 0; l--) {
@@ -368,14 +368,14 @@ public class CNN implements Serializable {
                 case conv:
                     setConvErrors(layer, nextLayer);
                     break;
-                default:// Ö»ÓĞ²ÉÑù²ãºÍ¾í»ı²ãĞèÒª´¦Àí²Ğ²î£¬ÊäÈë²ãÃ»ÓĞ²Ğ²î£¬Êä³ö²ãÒÑ¾­´¦Àí¹ı
+                default:// åªæœ‰é‡‡æ ·å±‚å’Œå·ç§¯å±‚éœ€è¦å¤„ç†æ®‹å·®ï¼Œè¾“å…¥å±‚æ²¡æœ‰æ®‹å·®ï¼Œè¾“å‡ºå±‚å·²ç»å¤„ç†è¿‡
                     break;
             }
         }
     }
 
     /**
-     * ÉèÖÃ²ÉÑù²ãµÄ²Ğ²î
+     * è®¾ç½®é‡‡æ ·å±‚çš„æ®‹å·®
      * 
      * @param layer
      * @param nextLayer
@@ -388,11 +388,11 @@ public class CNN implements Serializable {
             @Override
             public void process(int start, int end) {
                 for (int i = start; i < end; i++) {
-                    double[][] sum = null;// ¶ÔÃ¿Ò»¸ö¾í»ı½øĞĞÇóºÍ
+                    double[][] sum = null;// å¯¹æ¯ä¸€ä¸ªå·ç§¯è¿›è¡Œæ±‚å’Œ
                     for (int j = 0; j < nextMapNum; j++) {
                         double[][] nextError = nextLayer.getError(j);
                         double[][] kernel = nextLayer.getKernel(i, j);
-                        // ¶Ô¾í»ıºË½øĞĞ180¶ÈĞı×ª£¬È»ºó½øĞĞfullÄ£Ê½ÏÂµÃ¾í»ı
+                        // å¯¹å·ç§¯æ ¸è¿›è¡Œ180åº¦æ—‹è½¬ï¼Œç„¶åè¿›è¡Œfullæ¨¡å¼ä¸‹å¾—å·ç§¯
                         if (sum == null)
                             sum = Util.convnFull(nextError, Util.rot180(kernel));
                         else
@@ -409,14 +409,14 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ÉèÖÃ¾í»ı²ãµÄ²Ğ²î
+     * è®¾ç½®å·ç§¯å±‚çš„æ®‹å·®
      * 
      * @param layer
      * @param nextLayer
      */
     private void setConvErrors(final Layer layer, final Layer nextLayer) {
-        // ¾í»ı²ãµÄÏÂÒ»²ãÎª²ÉÑù²ã£¬¼´Á½²ãµÄmap¸öÊıÏàÍ¬£¬ÇÒÒ»¸ömapÖ»ÓëÁîÒ»²ãµÄÒ»¸ömapÁ¬½Ó£¬
-        // Òò´ËÖ»Ğè½«ÏÂÒ»²ãµÄ²Ğ²îkroneckerÀ©Õ¹ÔÙÓÃµã»ı¼´¿É
+        // å·ç§¯å±‚çš„ä¸‹ä¸€å±‚ä¸ºé‡‡æ ·å±‚ï¼Œå³ä¸¤å±‚çš„mapä¸ªæ•°ç›¸åŒï¼Œä¸”ä¸€ä¸ªmapåªä¸ä»¤ä¸€å±‚çš„ä¸€ä¸ªmapè¿æ¥ï¼Œ
+        // å› æ­¤åªéœ€å°†ä¸‹ä¸€å±‚çš„æ®‹å·®kroneckeræ‰©å±•å†ç”¨ç‚¹ç§¯å³å¯
         int mapNum = layer.getOutMapNum();
         new TaskManager(mapNum) {
 
@@ -426,7 +426,7 @@ public class CNN implements Serializable {
                     Size scale = nextLayer.getScaleSize();
                     double[][] nextError = nextLayer.getError(m);
                     double[][] map = layer.getMap(m);
-                    // ¾ØÕóÏà³Ë£¬µ«¶ÔµÚ¶ş¸ö¾ØÕóµÄÃ¿¸öÔªËØvalue½øĞĞ1-value²Ù×÷
+                    // çŸ©é˜µç›¸ä¹˜ï¼Œä½†å¯¹ç¬¬äºŒä¸ªçŸ©é˜µçš„æ¯ä¸ªå…ƒç´ valueè¿›è¡Œ1-valueæ“ä½œ
                     double[][] outMatrix =
                             Util.matrixOp(map, Util.cloneMatrix(map), null, Util.one_value,
                                     Util.multiply);
@@ -443,7 +443,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ÉèÖÃÊä³ö²ãµÄ²Ğ²îÖµ,Êä³ö²ãµÄÉñ¾­µ¥Ôª¸öÊı½ÏÉÙ£¬Ôİ²»¿¼ÂÇ¶àÏß³Ì
+     * è®¾ç½®è¾“å‡ºå±‚çš„æ®‹å·®å€¼,è¾“å‡ºå±‚çš„ç¥ç»å•å…ƒä¸ªæ•°è¾ƒå°‘ï¼Œæš‚ä¸è€ƒè™‘å¤šçº¿ç¨‹
      * 
      * @param record
      * @return
@@ -463,7 +463,7 @@ public class CNN implements Serializable {
         // (target[m] - output);
         // outputLayer.setError(m, 0, 0, errors);
         // }
-        // // ÕıÈ·
+        // // æ­£ç¡®
         // if (isSame(outmaps, target))
         // return true;
         // return false;
@@ -487,24 +487,24 @@ public class CNN implements Serializable {
     }
 
     /**
-     * Ç°Ïò¼ÆËãÒ»Ìõ¼ÇÂ¼
+     * å‰å‘è®¡ç®—ä¸€æ¡è®°å½•
      * 
      * @param record
      */
     private void forward(Record record) {
-        // ÉèÖÃÊäÈë²ãµÄmap
+        // è®¾ç½®è¾“å…¥å±‚çš„map
         setInLayerOutput(record);
         for (int l = 1; l < layers.size(); l++) {
             Layer layer = layers.get(l);
             Layer lastLayer = layers.get(l - 1);
             switch (layer.getType()) {
-                case conv:// ¼ÆËã¾í»ı²ãµÄÊä³ö
+                case conv:// è®¡ç®—å·ç§¯å±‚çš„è¾“å‡º
                     setConvOutput(layer, lastLayer);
                     break;
-                case samp:// ¼ÆËã²ÉÑù²ãµÄÊä³ö
+                case samp:// è®¡ç®—é‡‡æ ·å±‚çš„è¾“å‡º
                     setSampOutput(layer, lastLayer);
                     break;
-                case output:// ¼ÆËãÊä³ö²ãµÄÊä³ö,Êä³ö²ãÊÇÒ»¸öÌØÊâµÄ¾í»ı²ã
+                case output:// è®¡ç®—è¾“å‡ºå±‚çš„è¾“å‡º,è¾“å‡ºå±‚æ˜¯ä¸€ä¸ªç‰¹æ®Šçš„å·ç§¯å±‚
                     setConvOutput(layer, lastLayer);
                     break;
                 default:
@@ -514,7 +514,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ¸ù¾İ¼ÇÂ¼Öµ£¬ÉèÖÃÊäÈë²ãµÄÊä³öÖµ
+     * æ ¹æ®è®°å½•å€¼ï¼Œè®¾ç½®è¾“å…¥å±‚çš„è¾“å‡ºå€¼
      * 
      * @param record
      */
@@ -523,17 +523,17 @@ public class CNN implements Serializable {
         final Size mapSize = inputLayer.getMapSize();
         final double[] attr = record.getAttrs();
         if (attr.length != mapSize.x * mapSize.y)
-            throw new RuntimeException("Êı¾İ¼ÇÂ¼µÄ´óĞ¡Óë¶¨ÒåµÄmap´óĞ¡²»Ò»ÖÂ!");
+            throw new RuntimeException("æ•°æ®è®°å½•çš„å¤§å°ä¸å®šä¹‰çš„mapå¤§å°ä¸ä¸€è‡´!");
         for (int i = 0; i < mapSize.x; i++) {
             for (int j = 0; j < mapSize.y; j++) {
-                // ½«¼ÇÂ¼ÊôĞÔµÄÒ»Î¬ÏòÁ¿Åª³É¶şÎ¬¾ØÕó
+                // å°†è®°å½•å±æ€§çš„ä¸€ç»´å‘é‡å¼„æˆäºŒç»´çŸ©é˜µ
                 inputLayer.setMapValue(0, i, j, attr[mapSize.x * i + j]);
             }
         }
     }
 
     /*
-     * ¼ÆËã¾í»ı²ãÊä³öÖµ,Ã¿¸öÏß³Ì¸ºÔğÒ»²¿·Ömap
+     * è®¡ç®—å·ç§¯å±‚è¾“å‡ºå€¼,æ¯ä¸ªçº¿ç¨‹è´Ÿè´£ä¸€éƒ¨åˆ†map
      */
     private void setConvOutput(final Layer layer, final Layer lastLayer) {
         int mapNum = layer.getOutMapNum();
@@ -543,7 +543,7 @@ public class CNN implements Serializable {
             @Override
             public void process(int start, int end) {
                 for (int j = start; j < end; j++) {
-                    double[][] sum = null;// ¶ÔÃ¿Ò»¸öÊäÈëmapµÄ¾í»ı½øĞĞÇóºÍ
+                    double[][] sum = null;// å¯¹æ¯ä¸€ä¸ªè¾“å…¥mapçš„å·ç§¯è¿›è¡Œæ±‚å’Œ
                     for (int i = 0; i < lastMapNum; i++) {
                         double[][] lastMap = lastLayer.getMap(i);
                         double[][] kernel = layer.getKernel(i, j);
@@ -574,7 +574,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ÉèÖÃ²ÉÑù²ãµÄÊä³öÖµ£¬²ÉÑù²ãÊÇ¶Ô¾í»ı²ãµÄ¾ùÖµ´¦Àí
+     * è®¾ç½®é‡‡æ ·å±‚çš„è¾“å‡ºå€¼ï¼Œé‡‡æ ·å±‚æ˜¯å¯¹å·ç§¯å±‚çš„å‡å€¼å¤„ç†
      * 
      * @param layer
      * @param lastLayer
@@ -588,7 +588,7 @@ public class CNN implements Serializable {
                 for (int i = start; i < end; i++) {
                     double[][] lastMap = lastLayer.getMap(i);
                     Size scaleSize = layer.getScaleSize();
-                    // °´scaleSizeÇøÓò½øĞĞ¾ùÖµ´¦Àí
+                    // æŒ‰scaleSizeåŒºåŸŸè¿›è¡Œå‡å€¼å¤„ç†
                     double[][] sampMatrix = Util.scaleMatrix(lastMap, scaleSize);
                     layer.setMapValue(i, sampMatrix);
                 }
@@ -599,14 +599,14 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ÉèÖÃcnnÍøÂçµÄÃ¿Ò»²ãµÄ²ÎÊı
+     * è®¾ç½®cnnç½‘ç»œçš„æ¯ä¸€å±‚çš„å‚æ•°
      * 
      * @param batchSize * @param classNum
      * @param inputMapSize
      */
     public void setup(int batchSize) {
         Layer inputLayer = layers.get(0);
-        // Ã¿Ò»²ã¶¼ĞèÒª³õÊ¼»¯Êä³ömap
+        // æ¯ä¸€å±‚éƒ½éœ€è¦åˆå§‹åŒ–è¾“å‡ºmap
         inputLayer.initOutmaps(batchSize);
         for (int i = 1; i < layers.size(); i++) {
             Layer layer = layers.get(i);
@@ -616,36 +616,36 @@ public class CNN implements Serializable {
                 case input:
                     break;
                 case conv:
-                    // ÉèÖÃmapµÄ´óĞ¡
+                    // è®¾ç½®mapçš„å¤§å°
                     layer.setMapSize(frontLayer.getMapSize().subtract(layer.getKernelSize(), 1));
-                    // ³õÊ¼»¯¾í»ıºË£¬¹²ÓĞfrontMapNum*outMapNum¸ö¾í»ıºË
+                    // åˆå§‹åŒ–å·ç§¯æ ¸ï¼Œå…±æœ‰frontMapNum*outMapNumä¸ªå·ç§¯æ ¸
 
                     layer.initKernel(frontMapNum);
-                    // ³õÊ¼»¯Æ«ÖÃ£¬¹²ÓĞfrontMapNum*outMapNum¸öÆ«ÖÃ
+                    // åˆå§‹åŒ–åç½®ï¼Œå…±æœ‰frontMapNum*outMapNumä¸ªåç½®
                     layer.initBias(frontMapNum);
-                    // batchµÄÃ¿¸ö¼ÇÂ¼¶¼Òª±£³ÖÒ»·İ²Ğ²î
+                    // batchçš„æ¯ä¸ªè®°å½•éƒ½è¦ä¿æŒä¸€ä»½æ®‹å·®
                     layer.initErros(batchSize);
-                    // Ã¿Ò»²ã¶¼ĞèÒª³õÊ¼»¯Êä³ömap
+                    // æ¯ä¸€å±‚éƒ½éœ€è¦åˆå§‹åŒ–è¾“å‡ºmap
                     layer.initOutmaps(batchSize);
                     break;
                 case samp:
-                    // ²ÉÑù²ãµÄmapÊıÁ¿ÓëÉÏÒ»²ãÏàÍ¬
+                    // é‡‡æ ·å±‚çš„mapæ•°é‡ä¸ä¸Šä¸€å±‚ç›¸åŒ
                     layer.setOutMapNum(frontMapNum);
-                    // ²ÉÑù²ãmapµÄ´óĞ¡ÊÇÉÏÒ»²ãmapµÄ´óĞ¡³ıÒÔscale´óĞ¡
+                    // é‡‡æ ·å±‚mapçš„å¤§å°æ˜¯ä¸Šä¸€å±‚mapçš„å¤§å°é™¤ä»¥scaleå¤§å°
                     layer.setMapSize(frontLayer.getMapSize().divide(layer.getScaleSize()));
-                    // batchµÄÃ¿¸ö¼ÇÂ¼¶¼Òª±£³ÖÒ»·İ²Ğ²î
+                    // batchçš„æ¯ä¸ªè®°å½•éƒ½è¦ä¿æŒä¸€ä»½æ®‹å·®
                     layer.initErros(batchSize);
-                    // Ã¿Ò»²ã¶¼ĞèÒª³õÊ¼»¯Êä³ömap
+                    // æ¯ä¸€å±‚éƒ½éœ€è¦åˆå§‹åŒ–è¾“å‡ºmap
                     layer.initOutmaps(batchSize);
                     break;
                 case output:
-                    // ³õÊ¼»¯È¨ÖØ£¨¾í»ıºË£©£¬Êä³ö²ãµÄ¾í»ıºË´óĞ¡ÎªÉÏÒ»²ãµÄmap´óĞ¡
+                    // åˆå§‹åŒ–æƒé‡ï¼ˆå·ç§¯æ ¸ï¼‰ï¼Œè¾“å‡ºå±‚çš„å·ç§¯æ ¸å¤§å°ä¸ºä¸Šä¸€å±‚çš„mapå¤§å°
                     layer.initOutputKerkel(frontMapNum, frontLayer.getMapSize());
-                    // ³õÊ¼»¯Æ«ÖÃ£¬¹²ÓĞfrontMapNum*outMapNum¸öÆ«ÖÃ
+                    // åˆå§‹åŒ–åç½®ï¼Œå…±æœ‰frontMapNum*outMapNumä¸ªåç½®
                     layer.initBias(frontMapNum);
-                    // batchµÄÃ¿¸ö¼ÇÂ¼¶¼Òª±£³ÖÒ»·İ²Ğ²î
+                    // batchçš„æ¯ä¸ªè®°å½•éƒ½è¦ä¿æŒä¸€ä»½æ®‹å·®
                     layer.initErros(batchSize);
-                    // Ã¿Ò»²ã¶¼ĞèÒª³õÊ¼»¯Êä³ömap
+                    // æ¯ä¸€å±‚éƒ½éœ€è¦åˆå§‹åŒ–è¾“å‡ºmap
                     layer.initOutmaps(batchSize);
                     break;
             }
@@ -653,11 +653,11 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ¹¹ÔìÕßÄ£Ê½¹¹Ôì¸÷²ã,ÒªÇóµ¹ÊıµÚ¶ş²ã±ØĞëÎª²ÉÑù²ã¶ø²»ÄÜÎª¾í»ı²ã
+     * æ„é€ è€…æ¨¡å¼æ„é€ å„å±‚,è¦æ±‚å€’æ•°ç¬¬äºŒå±‚å¿…é¡»ä¸ºé‡‡æ ·å±‚è€Œä¸èƒ½ä¸ºå·ç§¯å±‚
      * 
      * @author jiqunpeng
      * 
-     *         ´´½¨Ê±¼ä£º2014-7-8 ÏÂÎç4:54:29
+     *         åˆ›å»ºæ—¶é—´ï¼š2014-7-8 ä¸‹åˆ4:54:29
      */
     public static class LayerBuilder {
         private List<Layer> mLayers;
@@ -678,7 +678,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ĞòÁĞ»¯±£´æÄ£ĞÍ
+     * åºåˆ—åŒ–ä¿å­˜æ¨¡å‹
      * 
      * @param fileName
      */
@@ -695,7 +695,7 @@ public class CNN implements Serializable {
     }
 
     /**
-     * ·´ĞòÁĞ»¯µ¼ÈëÄ£ĞÍ
+     * ååºåˆ—åŒ–å¯¼å…¥æ¨¡å‹
      * 
      * @param fileName
      * @return

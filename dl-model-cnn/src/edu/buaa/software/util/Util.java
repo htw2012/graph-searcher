@@ -9,7 +9,7 @@ import edu.buaa.software.cnn.Layer.Size;
 public class Util {
 
     /**
-     * ¾ØÕó¶ÔÓ¦ÔªËØÏà³ËÊ±ÔÚÃ¿¸öÔªËØÉÏµÄ²Ù×÷
+     * çŸ©é˜µå¯¹åº”å…ƒç´ ç›¸ä¹˜æ—¶åœ¨æ¯ä¸ªå…ƒç´ ä¸Šçš„æ“ä½œ
      * 
      * 
      */
@@ -17,7 +17,7 @@ public class Util {
         public double process(double value);
     }
 
-    // ¶¨ÒåÃ¿¸öÔªËØvalue¶¼½øĞĞ1-valueµÄ²Ù×÷
+    // å®šä¹‰æ¯ä¸ªå…ƒç´ valueéƒ½è¿›è¡Œ1-valueçš„æ“ä½œ
     public static final Operator one_value = new Operator() {
         /**
 		 * 
@@ -30,7 +30,7 @@ public class Util {
         }
     };
 
-    // digmodº¯Êı
+    // digmodå‡½æ•°
     public static final Operator digmod = new Operator() {
         /**
 		 * 
@@ -48,7 +48,7 @@ public class Util {
     }
 
     /**
-     * ¶¨Òå¾ØÕó¶ÔÓ¦ÔªËØµÄ¼Ó·¨²Ù×÷
+     * å®šä¹‰çŸ©é˜µå¯¹åº”å…ƒç´ çš„åŠ æ³•æ“ä½œ
      */
     public static final OperatorOnTwo plus = new OperatorOnTwo() {
         /**
@@ -62,7 +62,7 @@ public class Util {
         }
     };
     /**
-     * ¶¨Òå¾ØÕó¶ÔÓ¦ÔªËØµÄ³Ë·¨²Ù×÷
+     * å®šä¹‰çŸ©é˜µå¯¹åº”å…ƒç´ çš„ä¹˜æ³•æ“ä½œ
      */
     public static OperatorOnTwo multiply = new OperatorOnTwo() {
         /**
@@ -77,7 +77,7 @@ public class Util {
     };
 
     /**
-     * ¶¨Òå¾ØÕó¶ÔÓ¦ÔªËØµÄ¼õ·¨²Ù×÷
+     * å®šä¹‰çŸ©é˜µå¯¹åº”å…ƒç´ çš„å‡æ³•æ“ä½œ
      */
     public static OperatorOnTwo minus = new OperatorOnTwo() {
         /**
@@ -101,7 +101,7 @@ public class Util {
     }
 
     /**
-     * ¶Ô¾ØÕó½øĞĞ180¶ÈĞı×ª,ÊÇÔÚmatrixµÄ¸±±¾ÉÏ¸´ÖÆ£¬²»»á¶ÔÔ­À´µÄ¾ØÕó½øĞĞĞŞ¸Ä
+     * å¯¹çŸ©é˜µè¿›è¡Œ180åº¦æ—‹è½¬,æ˜¯åœ¨matrixçš„å‰¯æœ¬ä¸Šå¤åˆ¶ï¼Œä¸ä¼šå¯¹åŸæ¥çš„çŸ©é˜µè¿›è¡Œä¿®æ”¹
      * 
      * @param matrix
      */
@@ -109,7 +109,7 @@ public class Util {
         matrix = cloneMatrix(matrix);
         int m = matrix.length;
         int n = matrix[0].length;
-        // °´ÁĞ¶Ô³Æ½øĞĞ½»»»
+        // æŒ‰åˆ—å¯¹ç§°è¿›è¡Œäº¤æ¢
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n / 2; j++) {
                 double tmp = matrix[i][j];
@@ -117,7 +117,7 @@ public class Util {
                 matrix[i][n - 1 - j] = tmp;
             }
         }
-        // °´ĞĞ¶Ô³Æ½øĞĞ½»»»
+        // æŒ‰è¡Œå¯¹ç§°è¿›è¡Œäº¤æ¢
         for (int j = 0; j < n; j++) {
             for (int i = 0; i < m / 2; i++) {
                 double tmp = matrix[i][j];
@@ -131,7 +131,7 @@ public class Util {
     private static Random r = new Random(2);
 
     /**
-     * Ëæ»ú³õÊ¼»¯¾ØÕó
+     * éšæœºåˆå§‹åŒ–çŸ©é˜µ
      * 
      * @param x
      * @param y
@@ -143,7 +143,7 @@ public class Util {
         int tag = 1;
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                // Ëæ»úÖµÔÚ[-0.05,0.05)Ö®¼ä£¬ÈÃÈ¨ÖØ³õÊ¼»¯Öµ½ÏĞ¡£¬ÓĞÀûÓÚÓÚ±ÜÃâ¹ıÄâºÏ
+                // éšæœºå€¼åœ¨[-0.05,0.05)ä¹‹é—´ï¼Œè®©æƒé‡åˆå§‹åŒ–å€¼è¾ƒå°ï¼Œæœ‰åˆ©äºäºé¿å…è¿‡æ‹Ÿåˆ
                 matrix[i][j] = (r.nextDouble() - 0.05) / 10;
                 // matrix[i][j] = tag * 0.5;
                 // if (b)
@@ -156,7 +156,7 @@ public class Util {
     }
 
     /**
-     * Ëæ»ú³õÊ¼»¯Ò»Î¬ÏòÁ¿
+     * éšæœºåˆå§‹åŒ–ä¸€ç»´å‘é‡
      * 
      * @param len
      * @return
@@ -171,7 +171,7 @@ public class Util {
     }
 
     /**
-     * Ëæ»úÅÅÁĞµÄ³éÑù£¬Ëæ»ú³éÈ¡batchSize¸ö[0,size)µÄÊé
+     * éšæœºæ’åˆ—çš„æŠ½æ ·ï¼ŒéšæœºæŠ½å–batchSizeä¸ª[0,size)çš„ä¹¦
      * 
      * @param size
      * @param batchSize
@@ -190,7 +190,7 @@ public class Util {
     }
 
     /**
-     * ¸´ÖÆ¾ØÕó
+     * å¤åˆ¶çŸ©é˜µ
      * 
      * @param matrix
      * @return
@@ -210,7 +210,7 @@ public class Util {
     }
 
     /**
-     * ¶Ôµ¥¸ö¾ØÕó½øĞĞ²Ù×÷
+     * å¯¹å•ä¸ªçŸ©é˜µè¿›è¡Œæ“ä½œ
      * 
      * @param ma
      * @param operator
@@ -229,12 +229,12 @@ public class Util {
     }
 
     /**
-     * Á½¸öÎ¬¶ÈÏàÍ¬µÄ¾ØÕó¶ÔÓ¦ÔªËØ²Ù×÷,µÃµ½µÄ½á¹û·½·¨mbÖĞ£¬¼´mb[i][j] = (op_a ma[i][j]) op (op_b mb[i][j])
+     * ä¸¤ä¸ªç»´åº¦ç›¸åŒçš„çŸ©é˜µå¯¹åº”å…ƒç´ æ“ä½œ,å¾—åˆ°çš„ç»“æœæ–¹æ³•mbä¸­ï¼Œå³mb[i][j] = (op_a ma[i][j]) op (op_b mb[i][j])
      * 
      * @param ma
      * @param mb
-     * @param operatorB ÔÚµÚmb¾ØÕóÉÏµÄ²Ù×÷
-     * @param operatorA ÔÚma¾ØÕóÔªËØÉÏµÄ²Ù×÷
+     * @param operatorB åœ¨ç¬¬mbçŸ©é˜µä¸Šçš„æ“ä½œ
+     * @param operatorA åœ¨maçŸ©é˜µå…ƒç´ ä¸Šçš„æ“ä½œ
      * @return
      * 
      */
@@ -243,7 +243,7 @@ public class Util {
         final int m = ma.length;
         int n = ma[0].length;
         if (m != mb.length || n != mb[0].length)
-            throw new RuntimeException("Á½¸ö¾ØÕó´óĞ¡²»Ò»ÖÂ ma.length:" + ma.length + "  mb.length:"
+            throw new RuntimeException("ä¸¤ä¸ªçŸ©é˜µå¤§å°ä¸ä¸€è‡´ ma.length:" + ma.length + "  mb.length:"
                     + mb.length);
 
         for (int i = 0; i < m; i++) {
@@ -259,7 +259,7 @@ public class Util {
     }
 
     /**
-     * ¿ËÂŞÄÚ¿Ë»ı,¶Ô¾ØÕó½øĞĞÀ©Õ¹
+     * å…‹ç½—å†…å…‹ç§¯,å¯¹çŸ©é˜µè¿›è¡Œæ‰©å±•
      * 
      * @param matrix
      * @param scale
@@ -283,7 +283,7 @@ public class Util {
     }
 
     /**
-     * ¶Ô¾ØÕó½øĞĞ¾ùÖµËõĞ¡
+     * å¯¹çŸ©é˜µè¿›è¡Œå‡å€¼ç¼©å°
      * 
      * @param matrix
      * @param scaleSize
@@ -295,7 +295,7 @@ public class Util {
         final int sm = m / scale.x;
         final int sn = n / scale.y;
         final double[][] outMatrix = new double[sm][sn];
-        if (sm * scale.x != m || sn * scale.y != n) throw new RuntimeException("scale²»ÄÜÕû³ımatrix");
+        if (sm * scale.x != m || sn * scale.y != n) throw new RuntimeException("scaleä¸èƒ½æ•´é™¤matrix");
         final int size = scale.x * scale.y;
         for (int i = 0; i < sm; i++) {
             for (int j = 0; j < sn; j++) {
@@ -312,7 +312,7 @@ public class Util {
     }
 
     /**
-     * ¼ÆËãfullÄ£Ê½µÄ¾í»ı
+     * è®¡ç®—fullæ¨¡å¼çš„å·ç§¯
      * 
      * @param matrix
      * @param kernel
@@ -323,7 +323,7 @@ public class Util {
         int n = matrix[0].length;
         final int km = kernel.length;
         final int kn = kernel[0].length;
-        // À©Õ¹¾ØÕó
+        // æ‰©å±•çŸ©é˜µ
         final double[][] extendMatrix = new double[m + 2 * (km - 1)][n + 2 * (kn - 1)];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++)
@@ -333,7 +333,7 @@ public class Util {
     }
 
     /**
-     * ¼ÆËãvalidÄ£Ê½µÄ¾í»ı
+     * è®¡ç®—validæ¨¡å¼çš„å·ç§¯
      * 
      * @param matrix
      * @param kernel
@@ -345,11 +345,11 @@ public class Util {
         int n = matrix[0].length;
         final int km = kernel.length;
         final int kn = kernel[0].length;
-        // ĞèÒª×ö¾í»ıµÄÁĞÊı
+        // éœ€è¦åšå·ç§¯çš„åˆ—æ•°
         int kns = n - kn + 1;
-        // ĞèÒª×ö¾í»ıµÄĞĞÊı
+        // éœ€è¦åšå·ç§¯çš„è¡Œæ•°
         final int kms = m - km + 1;
-        // ½á¹û¾ØÕó
+        // ç»“æœçŸ©é˜µ
         final double[][] outMatrix = new double[kms][kns];
 
         for (int i = 0; i < kms; i++) {
@@ -368,7 +368,7 @@ public class Util {
     }
 
     /**
-     * ÈıÎ¬¾ØÕóµÄ¾í»ı,ÕâÀïÒªÇóÁ½¸ö¾ØÕóµÄÒ»Î¬ÏàÍ¬
+     * ä¸‰ç»´çŸ©é˜µçš„å·ç§¯,è¿™é‡Œè¦æ±‚ä¸¤ä¸ªçŸ©é˜µçš„ä¸€ç»´ç›¸åŒ
      * 
      * @param matrix
      * @param kernel
@@ -385,8 +385,8 @@ public class Util {
         int kms = m - km + 1;
         int kns = n - kn + 1;
         int khs = h - kh + 1;
-        if (matrix.length != kernel.length) throw new RuntimeException("¾ØÕóÓë¾í»ıºËÔÚµÚÒ»Î¬ÉÏ²»Í¬");
-        // ½á¹û¾ØÕó
+        if (matrix.length != kernel.length) throw new RuntimeException("çŸ©é˜µä¸å·ç§¯æ ¸åœ¨ç¬¬ä¸€ç»´ä¸Šä¸åŒ");
+        // ç»“æœçŸ©é˜µ
         final double[][][] outMatrix = new double[kms][kns][khs];
         for (int i = 0; i < kms; i++) {
             for (int j = 0; j < kns; j++)
@@ -411,10 +411,10 @@ public class Util {
     }
 
     /**
-     * ¶Ô¾ØÕóÔªËØÇóºÍ
+     * å¯¹çŸ©é˜µå…ƒç´ æ±‚å’Œ
      * 
      * @param error
-     * @return ×¢ÒâÕâ¸öÇóºÍºÜ¿ÉÄÜ»áÒç³ö
+     * @return æ³¨æ„è¿™ä¸ªæ±‚å’Œå¾ˆå¯èƒ½ä¼šæº¢å‡º
      */
 
     public static double sum(double[][] error) {
@@ -430,7 +430,7 @@ public class Util {
     }
 
     /**
-     * ¶Ôerrors[...][j]ÔªËØÇóºÍ
+     * å¯¹errors[...][j]å…ƒç´ æ±‚å’Œ
      * 
      * @param errors
      * @param j
@@ -467,7 +467,7 @@ public class Util {
     }
 
     /**
-     * ²âÊÔ¾í»ı,²âÊÔ½á¹û£º4ºËÏÂ²¢·¢²¢ĞĞµÄ¾í»ıÌá¸ß²»µ½2±¶
+     * æµ‹è¯•å·ç§¯,æµ‹è¯•ç»“æœï¼š4æ ¸ä¸‹å¹¶å‘å¹¶è¡Œçš„å·ç§¯æé«˜ä¸åˆ°2å€
      */
     private static void testConvn() {
         int count = 1;
@@ -593,7 +593,7 @@ public class Util {
     }
 
     /**
-     * È¡×î´óµÄÔªËØµÄÏÂ±ê
+     * å–æœ€å¤§çš„å…ƒç´ çš„ä¸‹æ ‡
      * 
      * @param out
      * @return

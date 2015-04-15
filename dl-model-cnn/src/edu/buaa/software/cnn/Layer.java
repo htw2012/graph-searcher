@@ -6,49 +6,49 @@ import edu.buaa.software.util.Log;
 import edu.buaa.software.util.Util;
 
 /**
- * cnnÍøÂçµÄ²ã
+ * cnnç½‘ç»œçš„å±‚
  * 
  * 
  */
 public class Layer implements Serializable {
    
     private static final long serialVersionUID = -5747622503947497069L;
-    private LayerType type;// ²ãµÄÀàĞÍ
-    private int outMapNum;// Êä³ömapµÄ¸öÊı
-    private Size mapSize;// mapµÄ´óĞ¡
-    private Size kernelSize;// ¾í»ıºË´óĞ¡£¬Ö»ÓĞ¾í»ı²ãÓĞ
-    private Size scaleSize;// ²ÉÑù´óĞ¡£¬Ö»ÓĞ²ÉÑù²ãÓĞ
-    private double[][][][] kernel;// ¾í»ıºË£¬Ö»ÓĞ¾í»ı²ãºÍÊä³ö²ãÓĞ
-    private double[] bias;// Ã¿¸ömap¶ÔÓ¦Ò»¸öÆ«ÖÃ£¬Ö»ÓĞ¾í»ı²ãºÍÊä³ö²ãÓĞ
-    // ±£´æ¸÷¸öbatchµÄÊä³ömap£¬outmaps[0][0]±íÊ¾µÚÒ»Ìõ¼ÇÂ¼ÑµÁ·ÏÂµÚ0¸öÊä³ömap
+    private LayerType type;// å±‚çš„ç±»å‹
+    private int outMapNum;// è¾“å‡ºmapçš„ä¸ªæ•°
+    private Size mapSize;// mapçš„å¤§å°
+    private Size kernelSize;// å·ç§¯æ ¸å¤§å°ï¼Œåªæœ‰å·ç§¯å±‚æœ‰
+    private Size scaleSize;// é‡‡æ ·å¤§å°ï¼Œåªæœ‰é‡‡æ ·å±‚æœ‰
+    private double[][][][] kernel;// å·ç§¯æ ¸ï¼Œåªæœ‰å·ç§¯å±‚å’Œè¾“å‡ºå±‚æœ‰
+    private double[] bias;// æ¯ä¸ªmapå¯¹åº”ä¸€ä¸ªåç½®ï¼Œåªæœ‰å·ç§¯å±‚å’Œè¾“å‡ºå±‚æœ‰
+    // ä¿å­˜å„ä¸ªbatchçš„è¾“å‡ºmapï¼Œoutmaps[0][0]è¡¨ç¤ºç¬¬ä¸€æ¡è®°å½•è®­ç»ƒä¸‹ç¬¬0ä¸ªè¾“å‡ºmap
     private double[][][][] outmaps;
-    // ²Ğ²î£¬Óëmatlab toolboxµÄd¶ÔÓ¦
+    // æ®‹å·®ï¼Œä¸matlab toolboxçš„då¯¹åº”
     private double[][][][] errors;
 
-    private static int recordInBatch = 0;// ¼ÇÂ¼µ±Ç°ÑµÁ·µÄÊÇbatchµÄµÚ¼¸Ìõ¼ÇÂ¼
+    private static int recordInBatch = 0;// è®°å½•å½“å‰è®­ç»ƒçš„æ˜¯batchçš„ç¬¬å‡ æ¡è®°å½•
 
-    private int classNum = -1;// Àà±ğ¸öÊı
+    private int classNum = -1;// ç±»åˆ«ä¸ªæ•°
 
     private Layer() {
 
     }
 
     /**
-     * ×¼±¸ÏÂÒ»¸öbatchµÄÑµÁ·
+     * å‡†å¤‡ä¸‹ä¸€ä¸ªbatchçš„è®­ç»ƒ
      */
     public static void prepareForNewBatch() {
         recordInBatch = 0;
     }
 
     /**
-     * ×¼±¸ÏÂÒ»Ìõ¼ÇÂ¼µÄÑµÁ·
+     * å‡†å¤‡ä¸‹ä¸€æ¡è®°å½•çš„è®­ç»ƒ
      */
     public static void prepareForNewRecord() {
         recordInBatch++;
     }
 
     /**
-     * ³õÊ¼»¯ÊäÈë²ã
+     * åˆå§‹åŒ–è¾“å…¥å±‚
      * 
      * @param mapSize
      * @return
@@ -56,13 +56,13 @@ public class Layer implements Serializable {
     public static Layer buildInputLayer(Size mapSize) {
         Layer layer = new Layer();
         layer.type = LayerType.input;
-        layer.outMapNum = 1;// ÊäÈë²ãµÄmap¸öÊıÎª1£¬¼´Ò»ÕÅÍ¼
+        layer.outMapNum = 1;// è¾“å…¥å±‚çš„mapä¸ªæ•°ä¸º1ï¼Œå³ä¸€å¼ å›¾
         layer.setMapSize(mapSize);//
         return layer;
     }
 
     /**
-     * ¹¹Ôì¾í»ı²ã
+     * æ„é€ å·ç§¯å±‚
      * 
      * @return
      */
@@ -75,7 +75,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ¹¹Ôì²ÉÑù²ã
+     * æ„é€ é‡‡æ ·å±‚
      * 
      * @param scaleSize
      * @return
@@ -88,7 +88,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ¹¹ÔìÊä³ö²ã,Àà±ğ¸öÊı£¬¸ù¾İÀà±ğµÄ¸öÊıÀ´¾ö¶¨Êä³öµ¥ÔªµÄ¸öÊı
+     * æ„é€ è¾“å‡ºå±‚,ç±»åˆ«ä¸ªæ•°ï¼Œæ ¹æ®ç±»åˆ«çš„ä¸ªæ•°æ¥å†³å®šè¾“å‡ºå•å…ƒçš„ä¸ªæ•°
      * 
      * @return
      */
@@ -107,7 +107,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡mapµÄ´óĞ¡
+     * è·å–mapçš„å¤§å°
      * 
      * @return
      */
@@ -116,7 +116,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ÉèÖÃmapµÄ´óĞ¡
+     * è®¾ç½®mapçš„å¤§å°
      * 
      * @param mapSize
      */
@@ -125,7 +125,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡²ãµÄÀàĞÍ
+     * è·å–å±‚çš„ç±»å‹
      * 
      * @return
      */
@@ -134,7 +134,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡Êä³öÏòÁ¿¸öÊı
+     * è·å–è¾“å‡ºå‘é‡ä¸ªæ•°
      * 
      * @return
      */
@@ -144,7 +144,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ÉèÖÃÊä³ömapµÄ¸öÊı
+     * è®¾ç½®è¾“å‡ºmapçš„ä¸ªæ•°
      * 
      * @param outMapNum
      */
@@ -153,7 +153,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡¾í»ıºËµÄ´óĞ¡£¬Ö»ÓĞ¾í»ı²ãÓĞkernelSize£¬ÆäËû²ã¾ùÎ´null
+     * è·å–å·ç§¯æ ¸çš„å¤§å°ï¼Œåªæœ‰å·ç§¯å±‚æœ‰kernelSizeï¼Œå…¶ä»–å±‚å‡æœªnull
      * 
      * @return
      */
@@ -162,7 +162,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡²ÉÑù´óĞ¡£¬Ö»ÓĞ²ÉÑù²ãÓĞscaleSize£¬ÆäËû²ã¾ùÎ´null
+     * è·å–é‡‡æ ·å¤§å°ï¼Œåªæœ‰é‡‡æ ·å±‚æœ‰scaleSizeï¼Œå…¶ä»–å±‚å‡æœªnull
      * 
      * @return
      */
@@ -171,12 +171,12 @@ public class Layer implements Serializable {
     }
 
     enum LayerType {
-        // ÍøÂç²ãµÄÀàĞÍ£ºÊäÈë²ã¡¢Êä³ö²ã¡¢¾í»ı²ã¡¢²ÉÑù²ã
+        // ç½‘ç»œå±‚çš„ç±»å‹ï¼šè¾“å…¥å±‚ã€è¾“å‡ºå±‚ã€å·ç§¯å±‚ã€é‡‡æ ·å±‚
         input, output, conv, samp
     }
 
     /**
-     * ¾í»ıºË»òÕß²ÉÑù²ãscaleµÄ´óĞ¡,³¤Óë¿í¿ÉÒÔ²»µÈ.ÀàĞÍ°²È«£¬¶¨ÒÔºó²»¿ÉĞŞ¸Ä
+     * å·ç§¯æ ¸æˆ–è€…é‡‡æ ·å±‚scaleçš„å¤§å°,é•¿ä¸å®½å¯ä»¥ä¸ç­‰.ç±»å‹å®‰å…¨ï¼Œå®šä»¥åä¸å¯ä¿®æ”¹
      * 
      */
     public static class Size implements Serializable {
@@ -198,7 +198,7 @@ public class Layer implements Serializable {
         }
 
         /**
-         * Õû³ıscaleSizeµÃµ½Ò»¸öĞÂµÄSize£¬ÒªÇóthis.x¡¢this. yÄÜ·Ö±ğ±»scaleSize.x¡¢scaleSize.yÕû³ı
+         * æ•´é™¤scaleSizeå¾—åˆ°ä¸€ä¸ªæ–°çš„Sizeï¼Œè¦æ±‚this.xã€this. yèƒ½åˆ†åˆ«è¢«scaleSize.xã€scaleSize.yæ•´é™¤
          * 
          * @param scaleSize
          * @return
@@ -207,12 +207,12 @@ public class Layer implements Serializable {
             int x = this.x / scaleSize.x;
             int y = this.y / scaleSize.y;
             if (x * scaleSize.x != this.x || y * scaleSize.y != this.y)
-                throw new RuntimeException(this + "²»ÄÜÕû³ı" + scaleSize);
+                throw new RuntimeException(this + "ä¸èƒ½æ•´é™¤" + scaleSize);
             return new Size(x, y);
         }
 
         /**
-         * ¼õÈ¥size´óĞ¡£¬²¢xºÍy·Ö±ğ¸½¼ÓÒ»¸öÖµappend
+         * å‡å»sizeå¤§å°ï¼Œå¹¶xå’Œyåˆ†åˆ«é™„åŠ ä¸€ä¸ªå€¼append
          * 
          * @param size
          * @param append
@@ -226,7 +226,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * Ëæ»ú³õÊ¼»¯¾í»ıºË
+     * éšæœºåˆå§‹åŒ–å·ç§¯æ ¸
      * 
      * @param frontMapNum
      */
@@ -241,7 +241,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * Êä³ö²ãµÄ¾í»ıºËµÄ´óĞ¡ÊÇÉÏÒ»²ãµÄmap´óĞ¡
+     * è¾“å‡ºå±‚çš„å·ç§¯æ ¸çš„å¤§å°æ˜¯ä¸Šä¸€å±‚çš„mapå¤§å°
      * 
      * @param frontMapNum
      * @param size
@@ -258,7 +258,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ³õÊ¼»¯Æ«ÖÃ
+     * åˆå§‹åŒ–åç½®
      * 
      * @param frontMapNum
      */
@@ -267,7 +267,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ³õÊ¼»¯Êä³ömap
+     * åˆå§‹åŒ–è¾“å‡ºmap
      * 
      * @param batchSize
      */
@@ -276,11 +276,11 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ÉèÖÃmapÖµ
+     * è®¾ç½®mapå€¼
      * 
-     * @param mapNo µÚ¼¸¸ömap
-     * @param mapX mapµÄ¸ß
-     * @param mapY mapµÄ¿í
+     * @param mapNo ç¬¬å‡ ä¸ªmap
+     * @param mapX mapçš„é«˜
+     * @param mapY mapçš„å®½
      * @param value
      */
     public void setMapValue(int mapNo, int mapX, int mapY, double value) {
@@ -290,7 +290,7 @@ public class Layer implements Serializable {
     static int count = 0;
 
     /**
-     * ÒÔ¾ØÕóĞÎÊ½ÉèÖÃµÚmapNo¸ömapµÄÖµ
+     * ä»¥çŸ©é˜µå½¢å¼è®¾ç½®ç¬¬mapNoä¸ªmapçš„å€¼
      * 
      * @param mapNo
      * @param outMatrix
@@ -302,7 +302,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡µÚindex¸ömap¾ØÕó¡£´¦ÓÚĞÔÄÜ¿¼ÂÇ£¬Ã»ÓĞ·µ»Ø¸´ÖÆ¶ÔÏó£¬¶øÊÇÖ±½Ó·µ»ØÒıÓÃ£¬µ÷ÓÃ¶ËÇë½÷É÷£¬ ±ÜÃâĞŞ¸Äoutmaps£¬ÈçĞèĞŞ¸ÄÇëµ÷ÓÃsetMapValue(...)
+     * è·å–ç¬¬indexä¸ªmapçŸ©é˜µã€‚å¤„äºæ€§èƒ½è€ƒè™‘ï¼Œæ²¡æœ‰è¿”å›å¤åˆ¶å¯¹è±¡ï¼Œè€Œæ˜¯ç›´æ¥è¿”å›å¼•ç”¨ï¼Œè°ƒç”¨ç«¯è¯·è°¨æ…ï¼Œ é¿å…ä¿®æ”¹outmapsï¼Œå¦‚éœ€ä¿®æ”¹è¯·è°ƒç”¨setMapValue(...)
      * 
      * @param index
      * @return
@@ -312,10 +312,10 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡Ç°Ò»²ãµÚi¸ömapµ½µ±Ç°²ãµÚj¸ömapµÄ¾í»ıºË
+     * è·å–å‰ä¸€å±‚ç¬¬iä¸ªmapåˆ°å½“å‰å±‚ç¬¬jä¸ªmapçš„å·ç§¯æ ¸
      * 
-     * @param i ÉÏÒ»²ãµÄmapÏÂ±ê
-     * @param j µ±Ç°²ãµÄmapÏÂ±ê
+     * @param i ä¸Šä¸€å±‚çš„mapä¸‹æ ‡
+     * @param j å½“å‰å±‚çš„mapä¸‹æ ‡
      * @return
      */
     public double[][] getKernel(int i, int j) {
@@ -323,7 +323,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ÉèÖÃ²Ğ²îÖµ
+     * è®¾ç½®æ®‹å·®å€¼
      * 
      * @param mapNo
      * @param mapX
@@ -335,7 +335,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ÒÔmap¾ØÕó¿éĞÎÊ½ÉèÖÃ²Ğ²îÖµ
+     * ä»¥mapçŸ©é˜µå—å½¢å¼è®¾ç½®æ®‹å·®å€¼
      * 
      * @param mapNo
      * @param matrix
@@ -347,7 +347,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡µÚmapNo¸ömapµÄ²Ğ²î.Ã»ÓĞ·µ»Ø¸´ÖÆ¶ÔÏó£¬¶øÊÇÖ±½Ó·µ»ØÒıÓÃ£¬µ÷ÓÃ¶ËÇë½÷É÷£¬ ±ÜÃâĞŞ¸Äerrors£¬ÈçĞèĞŞ¸ÄÇëµ÷ÓÃsetError(...)
+     * è·å–ç¬¬mapNoä¸ªmapçš„æ®‹å·®.æ²¡æœ‰è¿”å›å¤åˆ¶å¯¹è±¡ï¼Œè€Œæ˜¯ç›´æ¥è¿”å›å¼•ç”¨ï¼Œè°ƒç”¨ç«¯è¯·è°¨æ…ï¼Œ é¿å…ä¿®æ”¹errorsï¼Œå¦‚éœ€ä¿®æ”¹è¯·è°ƒç”¨setError(...)
      * 
      * @param mapNo
      * @return
@@ -357,7 +357,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡ËùÓĞ(Ã¿¸ö¼ÇÂ¼ºÍÃ¿¸ömap)µÄ²Ğ²î
+     * è·å–æ‰€æœ‰(æ¯ä¸ªè®°å½•å’Œæ¯ä¸ªmap)çš„æ®‹å·®
      * 
      * @return
      */
@@ -366,7 +366,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ³õÊ¼»¯²Ğ²îÊı×é
+     * åˆå§‹åŒ–æ®‹å·®æ•°ç»„
      * 
      * @param batchSize
      */
@@ -385,7 +385,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡µÚmapNo¸ö
+     * è·å–ç¬¬mapNoä¸ª
      * 
      * @param mapNo
      * @return
@@ -395,7 +395,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * ÉèÖÃµÚmapNo¸ömapµÄÆ«ÖÃÖµ
+     * è®¾ç½®ç¬¬mapNoä¸ªmapçš„åç½®å€¼
      * 
      * @param mapNo
      * @param value
@@ -405,7 +405,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡batch¸÷¸ömap¾ØÕó
+     * è·å–batchå„ä¸ªmapçŸ©é˜µ
      * 
      * @return
      */
@@ -415,7 +415,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡µÚrecordId¼ÇÂ¼ÏÂµÚmapNoµÄ²Ğ²î
+     * è·å–ç¬¬recordIdè®°å½•ä¸‹ç¬¬mapNoçš„æ®‹å·®
      * 
      * @param recordId
      * @param mapNo
@@ -426,7 +426,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡µÚrecordId¼ÇÂ¼ÏÂµÚmapNoµÄÊä³ömap
+     * è·å–ç¬¬recordIdè®°å½•ä¸‹ç¬¬mapNoçš„è¾“å‡ºmap
      * 
      * @param recordId
      * @param mapNo
@@ -437,7 +437,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡Àà±ğ¸öÊı
+     * è·å–ç±»åˆ«ä¸ªæ•°
      * 
      * @return
      */
@@ -446,7 +446,7 @@ public class Layer implements Serializable {
     }
 
     /**
-     * »ñÈ¡ËùÓĞµÄ¾í»ıºË
+     * è·å–æ‰€æœ‰çš„å·ç§¯æ ¸
      * 
      * @return
      */
