@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) {
         Client client = new Client();
         
-        Data data = client.request("a");
+        Data data = client.request("a");//客户端会开启一个线程去执行真正操作
         System.out.println("请求完毕");
         try {
         	//这里可以用一个sleep代替了对其它业务逻辑的处理

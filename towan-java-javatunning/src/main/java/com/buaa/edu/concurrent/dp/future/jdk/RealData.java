@@ -1,13 +1,15 @@
 package com.buaa.edu.concurrent.dp.future.jdk;
 
 import java.util.concurrent.Callable;
-
+//实现callable可以获得返回值
 public class RealData implements Callable<String> {
+    
     private String para;
     public RealData(String para){
     	this.para=para;
     }
-	@Override
+	
+    @Override
 	public String call() throws Exception {
     	
     	StringBuffer sb=new StringBuffer();

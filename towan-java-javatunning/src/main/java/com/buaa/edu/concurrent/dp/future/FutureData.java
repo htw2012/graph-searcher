@@ -2,8 +2,9 @@ package com.buaa.edu.concurrent.dp.future;
 //关键，相当于一个虚拟数据，异步处理，封装RealData的等待过程
 public class FutureData implements Data {
     //FutureData是RealData封装
-    protected RealData realdata = null;
+    protected RealData realdata = null; //组合关系
     protected boolean isReady = false;
+    
     public synchronized void setRealData(RealData realdata) {
         if (isReady) {                        
             return;     
