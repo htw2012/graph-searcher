@@ -1,6 +1,6 @@
 package com.buaa.edu.concurrent.threadpool;
 
-import java.util.concurrent.BlockingQueue;
+//import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -8,7 +8,13 @@ import java.util.concurrent.TimeUnit;
 //import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Test;
-
+/**
+ * 
+ * <p>定值线程池，扩展其方法，便于调错</p>
+ * @author towan
+ * @email tongwenzide@163.com
+ * 2015年5月9日
+ */
 public class TestCustomThreadPool {
 	public class MyThread implements Runnable{
 		protected String name;
@@ -32,28 +38,13 @@ public class TestCustomThreadPool {
 		}
 	}
 	
-	public class MyThreadPoolExecutor extends ThreadPoolExecutor{
-		public MyThreadPoolExecutor(int corePoolSize, int maximumPoolSize,
-				long keepAliveTime, TimeUnit unit,
-				BlockingQueue<Runnable> workQueue) {
-			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
-		}
-		protected void beforeExecute(Thread t, Runnable r) {
-			System.out.println("beforeExecute MyThread Name:"+((MyThread)r).getName()+" TID:"+t.getId());
-		}
-		
-		protected void afterExecute(Runnable r, Throwable t) { 
-			 System.out.println("afterExecute TID:"+Thread.currentThread().getId());
-			 System.out.println("afterExecute PoolSize:"+this.getPoolSize());
-		}
-	}
 	
 	@Test
 	public void testThreadPoolExecutor1() throws InterruptedException {
 
 		long starttime=System.currentTimeMillis();
 		//ExecutorService exe=new MyThreadPoolExecutor(100,600,0L,TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(200));
-		ExecutorService exe=new MyThreadPoolExecutor(0, Integer.MAX_VALUE,
+		ExecutorService exe=new CustomThreadPoolExecutor(0, Integer.MAX_VALUE,
                 60L, TimeUnit.SECONDS,
                 new SynchronousQueue<Runnable>());
 		for(int i=0;i<1000;i++){
