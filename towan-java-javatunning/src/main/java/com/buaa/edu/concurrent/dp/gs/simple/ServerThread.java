@@ -7,7 +7,10 @@ public class ServerThread extends Thread {
         super(name);
         this.requestQueue = requestQueue;
     }
+    
+    @Override
     public void run() {
+        //一直在这里轮询，获得处理的请求
         while (true) {
             //得到请求
             final Request request = requestQueue.getRequest();

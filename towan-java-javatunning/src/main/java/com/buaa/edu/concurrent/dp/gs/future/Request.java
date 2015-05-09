@@ -1,7 +1,7 @@
 package com.buaa.edu.concurrent.dp.gs.future;
 
 import com.buaa.edu.concurrent.dp.future.Data;
-
+//携带结果
 public class Request {
     private String name;
     private Data response;//请求的返回值

@@ -8,12 +8,14 @@ public class ClientThread extends Thread {
         super(name);
         this.requestQueue = requestQueue;
     }
+    
+    @Override
     public void run() {
         for (int i = 0; i < 10; i++) {
             //构造请求
             Request request = new Request("RequestID:" + i+" Thread_Name:"+Thread.currentThread().getName());
             System.out.println(Thread.currentThread().getName() + " requests " + request);
-           //提交请求
+            //提交请求
             requestQueue.addRequest(request);
             try {
                 Thread.sleep(10);//客户端请求速度，快于服务端处理速度
