@@ -1,4 +1,4 @@
-package com.buaa.edu.concurrent.jdk.cas.atomic;
+package com.buaa.edu.concurrent.lockfree.atomic;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
