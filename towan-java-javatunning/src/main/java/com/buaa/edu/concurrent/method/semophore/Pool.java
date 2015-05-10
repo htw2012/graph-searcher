@@ -36,8 +36,8 @@ class Pool {
     
        protected synchronized Object getNextAvailableItem() {
          for (int i = 0; i < MAX_AVAILABLE; ++i) {
-           if (!used[i]) {
-              used[i] = true;
+           if (!used[i]) {//当前项未被使用则获得它
+              used[i] = true;//当前项标记为已经使用
               return items[i];
            }
          }
@@ -46,9 +46,9 @@ class Pool {
     
        protected synchronized boolean markAsUnused(Object item) {
          for (int i = 0; i < MAX_AVAILABLE; ++i) {
-           if (item == items[i]) {
+           if (item == items[i]) {//找到给定的索引项
               if (used[i]) {
-                used[i] = false;
+                used[i] = false;//将给定的标记为未使用
                 return true;
               } else
                 return false;
