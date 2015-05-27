@@ -176,7 +176,9 @@ public class HiddenLayer {
 	 * @return DoubleMatrix 隐含层输出
 	 */
 	public DoubleMatrix activate(DoubleMatrix input) {
-		output = MatrixFunctions.tanh(weight.mmul(input).add(bias));
+
+		DoubleMatrix add = weight.mmul(input).add(bias);
+        output = MatrixFunctions.tanh(add);
 		return output.dup();
 	}
 	

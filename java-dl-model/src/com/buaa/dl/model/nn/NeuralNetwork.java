@@ -160,7 +160,10 @@ public class NeuralNetwork {
 	 * @return DoubleMatrix 神经网络的输出
 	 */
 	public DoubleMatrix activate(DoubleMatrix input) {
-		return outputLayer.activate(hiddenLayer.activate(inputLayer.activate(input)));
+		DoubleMatrix h = inputLayer.activate(input);
+        DoubleMatrix activate = hiddenLayer.activate(h);
+        DoubleMatrix activate2 = outputLayer.activate(activate);
+        return activate2;
 	}
 
 	/*
@@ -229,14 +232,26 @@ public class NeuralNetwork {
 			
 			// 计算此轮迭代后的开放测试代价函数值
 			double openCost = 0.0;
-			for(Sample sample : testSet)
-				openCost += (sample.getTarget().mul(MatrixFunctions.log(activate(sample.getInput())))).sum();
+			for(Sample sample : testSet){
+			    openCost += (sample.getTarget().mul(MatrixFunctions.log(activate(sample.getInput())))).sum();
+			}
 			openCost = - openCost / testSet.size() + square() * lambda / 2.0;
 					
 			// 计算此轮迭代后的封闭测试代价函数值
 			double closeCost = 0.0;
+			int match = 0;
 			for(Sample sample : trainSet) {
-                DoubleMatrix doubleMatrix = sample.getTarget().mul(MatrixFunctions.log(activate(sample.getInput())));
+                DoubleMatrix input = sample.getInput();
+                //实际输出
+                DoubleMatrix output = activate(input);
+                
+                DoubleMatrix target = sample.getTarget();
+                if(target.argmax()==output.argmax()){
+                    match++;
+                }
+//                System.out.println("target:"+target);
+//                System.out.println("output:"+output+", info:"+output.rows+","+output.columns+",values:"+output.get(0, 0)+","+output.get(1, 0));
+                DoubleMatrix doubleMatrix = target.mul(MatrixFunctions.log(output));
                 closeCost += doubleMatrix.sum();
             }
 			closeCost = - closeCost / trainSet.size() + square() * lambda / 2.0;
@@ -256,7 +271,7 @@ public class NeuralNetwork {
 			lastCloseCost = closeCost; // 更新lastCloseCost
 			long endTime = System.currentTimeMillis();
 			double time = (endTime - startTime) / 1000.0;
-			System.out.println(i + "," + openCost + "," + closeCost + "," + time + "s");
+			System.out.println(i + "," + openCost + "," + closeCost + "," + time + "s,pression:"+match+":"+trainSet.size());
 		}
 	}
 	
