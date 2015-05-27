@@ -1,6 +1,6 @@
 package com.buaa.dl.model.nn.parallel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.buaa.dl.model.nn.NeuralNetwork;
 import com.buaa.dl.model.nn.sample.Sample;
@@ -11,7 +11,7 @@ import com.buaa.dl.model.nn.sample.Sample;
  */
 public class UpdateDiffThread implements Runnable {
 	private NeuralNetwork net; // 待训练的神经网络
-	private ArrayList<Sample> samples; // 训练样例
+	private List<Sample> samples; // 训练样例
 	
 	/*
 	 * 构造函数
@@ -19,7 +19,7 @@ public class UpdateDiffThread implements Runnable {
 	 * @param NeuralNetwork net 待训练的神经网络
 	 * @param ArrayList<Sample> samples 训练样例
 	 */
-	public UpdateDiffThread(NeuralNetwork net, ArrayList<Sample> samples) {
+	public UpdateDiffThread(NeuralNetwork net, List<Sample> samples) {
 		this.net = new NeuralNetwork(net);
 		this.samples = samples;
 	}

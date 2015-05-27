@@ -1,7 +1,7 @@
 package com.buaa.dl.model.nn.train;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import com.buaa.dl.model.nn.NeuralNetwork;
 import com.buaa.dl.model.nn.conf.Configuration;
@@ -19,15 +19,15 @@ public class Train {
 	private double eta; // 动量系数
 	private int numIterations; // 迭代次数
 	private int numThreads; // 线程数
-	private ArrayList<Sample> trainSet; // 训练集
-	private ArrayList<Sample> testSet; // 测试集
+	private List<Sample> trainSet; // 训练集
+	private List<Sample> testSet; // 测试集
 	
 	/*
 	 * 构造函数
 	 */
-	public Train() {
-		net = new NeuralNetwork(Configuration.modelFileName);
-		//net = new NeuralNetwork(Configuration.numNeurons);
+	public Train() throws IOException {
+//		net = new NeuralNetwork(Configuration.modelFileName);
+		net = new NeuralNetwork(Configuration.numNeurons);
 		alpha = Configuration.alpha;
 		lambda = Configuration.lambda;
 		eta = Configuration.eta;
@@ -36,7 +36,6 @@ public class Train {
 		trainSet = Sample.loadFileSample(Configuration.trainFileName);
 		testSet = Sample.loadFileSample(Configuration.testFileName);
 	}
-	
 	/*
 	 * 训练
 	 */

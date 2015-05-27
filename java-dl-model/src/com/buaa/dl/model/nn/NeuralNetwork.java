@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
-import com.buaa.dl.model.nn.conf.Configuration;
 import com.buaa.dl.model.nn.layer.HiddenLayer;
 import com.buaa.dl.model.nn.layer.InputLayer;
 import com.buaa.dl.model.nn.layer.OutputLayer;
@@ -20,7 +19,6 @@ import com.buaa.dl.model.nn.util.FileUtil;
  * 神经网络
  * 
  */
-
 public class NeuralNetwork {
 	private InputLayer inputLayer; // 输入层
 	private HiddenLayer hiddenLayer; // 隐含层
@@ -180,40 +178,49 @@ public class NeuralNetwork {
 	/*
 	 * 训练神经网络
 	 * 
-	 * @param ArrayList<Sample> trainSet 训练集
-	 * @param ArrayList<Sample> testSet 测试集
+	 * @param List<Sample> trainSet 训练集
+	 * @param List<Sample> testSet 测试集
 	 * @param double alpha 学习率
 	 * @param double lambda 规则化参数
 	 * @param double eta 动量系数
 	 * @param int numIterations 迭代次数
 	 * @param int numThreads 线程数
 	 */
-	public void train(ArrayList<Sample> trainSet, ArrayList<Sample> testSet, double alpha, double lambda, double eta,
+	public void train(List<Sample> trainSet, List<Sample> testSet, double alpha, double lambda, double eta,
 			int numIterations, int numThreads) throws InterruptedException {
 		double lastCloseCost = Double.MAX_VALUE; // 上一轮迭代后的封闭测试代价函数值
 		double defaultAlpha = alpha; // 初始学习率作为默认学习率
 		
 		// 把训练集拆分为numThreads个小的训练集
-		ArrayList<ArrayList<Sample>> minitrainSets = new ArrayList<ArrayList<Sample>>();
-		for(int k = 0; k < numThreads; ++k)
-			minitrainSets.add(new ArrayList<Sample>(trainSet.subList(k * trainSet.size() / numThreads, (k + 1) * trainSet.size() / numThreads)));
-		
+		List<List<Sample>> minitrainSets = new ArrayList<>();
+		for(int k = 0; k < numThreads; ++k){
+		    int fromIndex = k * trainSet.size() / numThreads;
+            int toIndex = (k + 1) * trainSet.size() / numThreads;
+            List<Sample> subList = trainSet.subList(fromIndex, toIndex);
+            minitrainSets.add(new ArrayList<Sample>(subList));
+		}
 		// 迭代
 		for(int i = 1; i <= numIterations; ++i) {
 			long startTime = System.currentTimeMillis();
 			// 利用多线层进行参数偏倒数的计算，每个线程处理一个小训练集
-			ArrayList<UpdateDiffThread> updateDiffThreads = new ArrayList<UpdateDiffThread>(); // 多线程
-			for(ArrayList<Sample> minitrainSet : minitrainSets) // 初始化每个线程并分配任务
-				updateDiffThreads.add(new UpdateDiffThread(this, minitrainSet));
+			List<UpdateDiffThread> updateDiffThreads = new ArrayList<UpdateDiffThread>(); // 多线程
+			for(List<Sample> minitrainSet : minitrainSets){
+			    // 初始化每个线程并分配任务
+			    updateDiffThreads.add(new UpdateDiffThread(this, minitrainSet));
+			}
 			ExecutorService executor = Executors.newCachedThreadPool(); // 线程池
-			for(UpdateDiffThread updateDiffThread : updateDiffThreads) // 线程执行
-				executor.execute(updateDiffThread);
+			for(UpdateDiffThread updateDiffThread : updateDiffThreads){
+			    // 线程执行
+			    executor.execute(updateDiffThread);
+			} 
 			executor.shutdown(); // 禁止向executor中添加新的任务
 			while(! executor.awaitTermination(200, TimeUnit.MILLISECONDS)); // 确保所有线程执行完
 			
 			// 汇总各线程所计算出的参数偏倒数
-			for(UpdateDiffThread updateDiffThread : updateDiffThreads) // 累加 
-				addDiff(updateDiffThread.getNeuralNetwork());
+			for(UpdateDiffThread updateDiffThread : updateDiffThreads){
+			    // 累加 
+			    addDiff(updateDiffThread.getNeuralNetwork());
+			} 
 			
 			// 更新输入向量和神经网络参数
 			//for(Sample sample : trainSet) // 更新输入向量 
@@ -228,30 +235,28 @@ public class NeuralNetwork {
 					
 			// 计算此轮迭代后的封闭测试代价函数值
 			double closeCost = 0.0;
-			for(Sample sample : trainSet)
-				closeCost += (sample.getTarget().mul(MatrixFunctions.log(activate(sample.getInput())))).sum();
+			for(Sample sample : trainSet) {
+                DoubleMatrix doubleMatrix = sample.getTarget().mul(MatrixFunctions.log(activate(sample.getInput())));
+                closeCost += doubleMatrix.sum();
+            }
 			closeCost = - closeCost / trainSet.size() + square() * lambda / 2.0;
 			
 			// 调整学习率
-			if(closeCost < lastCloseCost) // 封闭测试代价函数值减小，提高学习率
-				alpha  *= 1.05;
-			else if(closeCost < 1.05 * lastCloseCost) // 封闭测试代价函数值增加，降低学习率
-				alpha *= 0.7;
-			else // 封闭测试代价函数值增加的较多，恢复默认学习率
-				alpha = defaultAlpha;
+			if(closeCost < lastCloseCost){
+			    // 封闭测试代价函数值减小，提高学习率
+			    alpha  *= 1.05;
+			}else if(closeCost < 1.05 * lastCloseCost) {
+			    // 封闭测试代价函数值增加，降低学习率
+			    alpha *= 0.7;
+			}else {
+			    // 封闭测试代价函数值增加的较多，恢复默认学习率
+			    alpha = defaultAlpha;
+			}
+			
 			lastCloseCost = closeCost; // 更新lastCloseCost
-
 			long endTime = System.currentTimeMillis();
 			double time = (endTime - startTime) / 1000.0;
 			System.out.println(i + "," + openCost + "," + closeCost + "," + time + "s");
-			
-			String fileName = Configuration.outputModelFileName;
-			fileName = fileName.replace(".txt", "_" + i + ".txt");
-			try {
-				this.save(fileName);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	
@@ -270,6 +275,7 @@ public class NeuralNetwork {
 	 * @param String fileName 保存的文件名
 	 */
 	public void save(String fileName) throws IOException {
+	    
 		List<String> lines = new ArrayList<String>();
 		
 		lines.add(Integer.toString(inputLayer.getNumNeurons())); // 输入层神经元个数
