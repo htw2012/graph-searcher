@@ -17,7 +17,7 @@ public class LineDataProvider implements DataProvider {
     String[] strs;
     public LineDataProvider(String line) {
         super();
-        strs = line.split("\t");
+        strs = line.split(",");
     }
 
     /*

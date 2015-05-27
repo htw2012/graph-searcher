@@ -14,8 +14,6 @@ public class Configuration {
 	public static final int numThreads = 4; // 线程数
 	private static final String folder = System.getProperty("user.dir"); // 当前目录 
 	public static final String trainFileName = folder + "/data/trainset.txt"; // 训练数据文件
-	public static final String testFileName = folder + "/data/测试样例54_1.txt"; // 测试数据文件
-	public static final String testFileName2 = folder + "/data/test_close.txt"; // 测试数据文件2
-	public static final String modelFileName= folder + "/data/modelFile_new.txt"; // 模型参数文件
+	public static final String testFileName = folder + "/data/testset.txt"; // 测试数据文件
 	public static final String outputModelFileName = folder + "/data/modelFile_new.txt"; // 模型参数文件
 }
