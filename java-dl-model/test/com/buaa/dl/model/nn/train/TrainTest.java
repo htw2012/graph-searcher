@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import com.buaa.dl.model.nn.train.Train;
+
 /**
  * <p>(用一句话描述该文件做什么)</p>
  * @author towan

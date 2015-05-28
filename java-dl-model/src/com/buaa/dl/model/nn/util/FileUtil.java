@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.apache.log4j.Logger;
 
 public class FileUtil {
@@ -129,5 +130,22 @@ public class FileUtil {
         reader.close();
         is.close();
         return list;
+    }
+    
+    public static void append(String fileName, String line,boolean flag) throws IOException {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            if(!flag){
+                file.createNewFile();
+                log.warn("file " + file + " has created");
+            }else{
+                log.error("file " + file + " not exist");
+                return;
+            }
+        }
+        //如果为true的话，就需要进行追加
+        FileWriter writer = new FileWriter(fileName, true);
+        writer.append(line+"\r\n" );
+        writer.close();
     }
 }

@@ -74,9 +74,9 @@ public class Sample {
 		for(String line:lines){
 		    LineDataProvider provider = new LineDataProvider(line);
 		    samples.add(new Sample(provider.getInput(), provider.getTarget()));
-		    if(samples.size() == 300){
+/*		    if(samples.size() == 300){
 		        break; //测试使用
-		    }
+		    }*/
 		}
 		return samples;
 	}

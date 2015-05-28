@@ -44,8 +44,8 @@ public class NeuralNetwork {
 	 */
 	public NeuralNetwork(String fileName) {
 		try {
-			List<String> lines = FileUtil.readByResource(fileName);
-			
+//		    List<String> lines = FileUtil.readByResource(fileName);
+		    List<String> lines = FileUtil.readByLine(fileName);
 			int numNeurons0 = Integer.valueOf(lines.get(0).trim());
 			int numNeurons1 = Integer.valueOf(lines.get(1).trim());
 			int numNeurons2 = Integer.valueOf(lines.get(2).trim());
@@ -232,8 +232,14 @@ public class NeuralNetwork {
 			
 			// 计算此轮迭代后的开放测试代价函数值
 			double openCost = 0.0;
+			int openMatch = 0;
 			for(Sample sample : testSet){
-			    openCost += (sample.getTarget().mul(MatrixFunctions.log(activate(sample.getInput())))).sum();
+			    DoubleMatrix target = sample.getTarget();
+			    DoubleMatrix output = activate(sample.getInput());
+			    if(target.argmax()==output.argmax()){
+			        openMatch++;
+                }
+                openCost += (target.mul(MatrixFunctions.log(output))).sum();
 			}
 			openCost = - openCost / testSet.size() + square() * lambda / 2.0;
 					
@@ -249,8 +255,6 @@ public class NeuralNetwork {
                 if(target.argmax()==output.argmax()){
                     match++;
                 }
-//                System.out.println("target:"+target);
-//                System.out.println("output:"+output+", info:"+output.rows+","+output.columns+",values:"+output.get(0, 0)+","+output.get(1, 0));
                 DoubleMatrix doubleMatrix = target.mul(MatrixFunctions.log(output));
                 closeCost += doubleMatrix.sum();
             }
@@ -271,7 +275,8 @@ public class NeuralNetwork {
 			lastCloseCost = closeCost; // 更新lastCloseCost
 			long endTime = System.currentTimeMillis();
 			double time = (endTime - startTime) / 1000.0;
-			System.out.println(i + "," + openCost + "," + closeCost + "," + time + "s,pression:"+match+":"+trainSet.size());
+			System.out.println(i + "," + openCost + "," + closeCost + "," + time + "s,train->"+match+":"+trainSet.size()+""
+			        + ",test->"+openMatch+":"+testSet.size());
 		}
 	}
 	
