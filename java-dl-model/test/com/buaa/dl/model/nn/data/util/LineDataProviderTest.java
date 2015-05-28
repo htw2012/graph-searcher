@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.buaa.dl.model.nn.data.LineDataProvider;
 import com.buaa.dl.model.nn.util.FileUtil;
 
 /**

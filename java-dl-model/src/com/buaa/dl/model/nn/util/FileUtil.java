@@ -148,4 +148,23 @@ public class FileUtil {
         writer.append(line+"\r\n" );
         writer.close();
     }
+    public static String readToString(String fileName) throws IOException {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            log.error("file '" + fileName + "' not exist.");
+            return null;
+        }
+        InputStream in = new FileInputStream(file);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String result = "";
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            if (!line.trim().isEmpty()) {
+                result += line + " ";
+            }
+        }
+        reader.close();
+        in.close();
+        return result;
+    }
 }

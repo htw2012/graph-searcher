@@ -1,7 +1,7 @@
 /*
  * Copyright 北京航空航天大学 @ 2015 版权所有
  */
-package com.buaa.dl.model.nn.data.util;
+package com.buaa.dl.model.nn.data;
 
 import org.jblas.DoubleMatrix;
 

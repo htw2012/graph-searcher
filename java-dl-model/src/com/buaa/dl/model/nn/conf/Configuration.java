@@ -16,4 +16,5 @@ public class Configuration {
 	public static final String trainFileName = folder + "/data/trainset.txt"; // 训练数据文件
 	public static final String testFileName = folder + "/data/testset.txt"; // 测试数据文件
 	public static final String outputModelFileName = folder + "/data/modelFile_new.txt"; // 模型参数文件
+    public static String vecFileName = "";
 }

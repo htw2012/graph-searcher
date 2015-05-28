@@ -3,8 +3,10 @@ package com.buaa.dl.model.nn.sample;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jblas.DoubleMatrix;
-import com.buaa.dl.model.nn.data.util.LineDataProvider;
+
+import com.buaa.dl.model.nn.data.LineDataProvider;
 import com.buaa.dl.model.nn.util.FileUtil;
 
 /**

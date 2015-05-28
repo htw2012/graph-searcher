@@ -1,5 +1,5 @@
 
-package com.buaa.dl.model.nn.data.util;
+package com.buaa.dl.model.nn.data;
 
 import org.jblas.DoubleMatrix;
 public interface DataProvider {
