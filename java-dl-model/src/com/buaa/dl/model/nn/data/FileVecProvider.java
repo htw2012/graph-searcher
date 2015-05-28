@@ -43,33 +43,35 @@ public class FileVecProvider {
             sumVec = VectorUtils.getSum(sumVec, sentVec);
             emddings.add(sentVec);
         }
-        String sumLine = "";
-        for(double d:sumVec){
-            sumLine +=d+",";
-        }
         
         for(double[] db:emddings){
-            String line = getLineData(db,sumLine);
+            String line = getLineData(db,sumVec);
+            FileUtil.append(featureFilename, line, false);
         }
-        FileUtil.append(featureFilename, sumLine, false);
         
     }
     /**
      * <p>
      * 获得每行，逗号分割
      * </p>
-     * @param db
+     * @param vec1
      * @param sumLine
      * @return
      * @author towan
      * 2015年5月28日
      */
-    private static String getLineData(double[] db, String sumLine) {
-        String line = "";
-        
-        return null;
+    private static String getLineData(double[] vec1, double[] sumVec) {
+        String line = vec1[0]+"";
+        for(int i=1;i<vec1.length;i++){
+            line = String.format("%s, %s", line,vec1[i]);
+        }
+        for(int i=0;i<sumVec.length;i++){
+            line = String.format("%s, %s", line,sumVec[i]);
+        }
+        line = line.substring(0, line.length());
+        return line;
     }
-    public static void main(String[] args) throws IOException {
+    public static void main2(String[] args) throws IOException {
         double []vec1 = {1.2,33.44,544.5};
         double []vec2 = {1.25,33.44,644.5};
         String line = vec1[0]+"";
@@ -85,7 +87,7 @@ public class FileVecProvider {
         String []strs = line.split(",");
         System.out.println("Size:"+strs.length+"\t"+strs[4]);
     }
-    public static void main2(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         String filename = "data/test/document";
         String featureFilename = "data/test/featureFile";
         genFileFeature(filename, featureFilename);
