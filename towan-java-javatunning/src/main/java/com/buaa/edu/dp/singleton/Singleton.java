@@ -1,16 +1,14 @@
 package com.buaa.edu.dp.singleton;
 /**
  * 
- * <p>ÆÓËØµäĞÍµÄµ¥Àı</p>
- * @author huangtw3
- * @Email  huangtw3@chanjet.com
- * 2015Äê5ÔÂ1ÈÕÉÏÎç10:27:18
+ * <p>æœ´ç´ å…¸å‹çš„å•ä¾‹</p>
+ * 2015å¹´5æœˆ1æ—¥ä¸Šåˆ10:27:18
  *
  * @version V1.0
  */
 public class Singleton {
 	private Singleton() {
-		//´´½¨µ¥ÀıµÄ¹ı³Ì¿ÉÄÜ»á±È½ÏÂı
+		//åˆ›å»ºå•ä¾‹çš„è¿‡ç¨‹å¯èƒ½ä¼šæ¯”è¾ƒæ…¢
 		System.out.println("Singleton is create");
 	}
 
