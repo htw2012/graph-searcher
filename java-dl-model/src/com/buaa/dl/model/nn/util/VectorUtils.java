@@ -52,7 +52,7 @@ public class VectorUtils {
     }
 
     /**
-     *	 获得 最大的元素
+     *	获得 最大的元素
      * @param arr
      * @return
      * 2015年1月30日下午3:37:55
