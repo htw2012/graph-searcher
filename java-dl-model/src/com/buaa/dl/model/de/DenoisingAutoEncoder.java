@@ -6,7 +6,7 @@ import java.util.Random;
  * <p></p>
  * @author towan
  * @Email  tongwenzide@163.com
- * 2015Äê2ÔÂ8ÈÕ
+ * 2015å¹´2æœˆ8æ—¥
  * @version V1.0
  */
 public class DenoisingAutoEncoder {
@@ -19,13 +19,11 @@ public class DenoisingAutoEncoder {
 	public Random rng;
 	
 	/**
-	 * ¾ùÔÈ·Ö²¼
+	 * å‡åŒ€åˆ†å¸ƒ
 	 * @param min
 	 * @param max
 	 * @return
-	 * @author huangtw3	
-	 * @Email  huangtw3@chanjet.com
-	 * 2015Äê2ÔÂ8ÈÕÉÏÎç11:27:35
+	 * 2015å¹´2æœˆ8æ—¥ä¸Šåˆ11:27:35
 	 */
 	public double uniform(double min, double max) {
 		return rng.nextDouble() * (max - min) + min;
