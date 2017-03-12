@@ -1,6 +1,3 @@
-/*
- * Copyright 畅捷通股份有限公司  @ 2015 版权所有
- */
 package com.buaa.dl.model.nn.util;
 
 import java.util.Arrays;
@@ -36,8 +33,6 @@ public class VectorUtils {
      * @param num 对应数组
      * @param k 
      * @return
-     * @author huangtw3	
-     * @Email  huangtw3@chanjet.com
      * 2015年1月22日上午11:52:32
      */
     public static double[] scale(double []num, double k){
@@ -60,8 +55,6 @@ public class VectorUtils {
      *	 获得 最大的元素
      * @param arr
      * @return
-     * @author huangtw3
-     * @Email  huangtw3@chanjet.com
      * 2015年1月30日下午3:37:55
      */
     public static int getMaxElement(int[] arr) {
