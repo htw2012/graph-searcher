@@ -9,8 +9,6 @@ import org.junit.Test;
 
 /**
  * <p>向量的使用类</p>
- * @author huangtw3
- * @Email  huangtw3@chanjet.com
  * 2015年1月16日下午3:51:17
  *
  * @version V1.0  
