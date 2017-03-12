@@ -1,6 +1,3 @@
-/*
- * Copyright ³©½İÍ¨¹É·İÓĞÏŞ¹«Ë¾ @ 2015 °æÈ¨ËùÓĞ
- */
 package com.buaa.dl.model.sda;
 
 import java.util.Random;
@@ -8,10 +5,10 @@ import java.util.Random;
 import com.buaa.dl.model.de.DenoisingAutoEncoder;
 /**
  * 
- * <p>StackedDenoisingAutoencodersµÄÊµÏÖ</p>
+ * <p>StackedDenoisingAutoencodersçš„å®ç°</p>
  * @author towan
  * @Email  tongwenzide@163.com
- * 2015Äê2ÔÂ8ÈÕ
+ * 2015å¹´2æœˆ8æ—¥
  * @version V1.0
  */
 public class StackedDenoisingAutoencoders {
