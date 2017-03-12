@@ -1,16 +1,13 @@
-/*
- * Copyright ³©½İÍ¨¹É·İÓĞÏŞ¹«Ë¾ @ 2015 °æÈ¨ËùÓĞ
- */
 package com.buaa.dl.model.sda;
 
 import java.util.Random;
 
 /**
  * 
- * <p>Òşº¬²ã</p>
+ * <p>éšå«å±‚</p>
  * @author towan
  * @Email  tongwenzide@163.com
- * 2015Äê2ÔÂ2ÈÕ
+ * 2015å¹´2æœˆ2æ—¥
  * @version V1.0
  */
 public class HiddenLayer {
