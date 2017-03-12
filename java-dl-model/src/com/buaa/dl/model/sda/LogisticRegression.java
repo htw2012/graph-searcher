@@ -1,13 +1,10 @@
-/*
- * Copyright ³©½ÝÍ¨¹É·ÝÓÐÏÞ¹«Ë¾ @ 2015 °æÈ¨ËùÓÐ
- */
 package com.buaa.dl.model.sda;
 /**
  * 
- * <p>Âß¼­»Ø¹éº¯Êý</p>
+ * <p>é€»è¾‘å›žå½’å‡½æ•°</p>
  * @author towan
  * @Email  tongwenzide@163.com
- * 2015Äê2ÔÂ8ÈÕ
+ * 2015å¹´2æœˆ8æ—¥
  * @version V1.0
  */
 public class LogisticRegression {
