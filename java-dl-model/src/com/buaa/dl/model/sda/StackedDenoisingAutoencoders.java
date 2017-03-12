@@ -1,7 +1,6 @@
 package com.buaa.dl.model.sda;
 
 import java.util.Random;
-
 import com.buaa.dl.model.de.DenoisingAutoEncoder;
 /**
  * 
